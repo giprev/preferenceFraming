@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Cog-load on MPL</title>
+    <!-- Load language definitions first -->
+    <script src="jatos.js"></script>
+    <script src="shared/helpers_demo.js"></script>
+    <!-- <script src="shared/languages.js"></script> -->
+    <script src="shared/languagesNewInstructions.js"></script>
+    <!-- <script src="shared/trainingLanguages.js"></script> -->
+    <!-- Then load parameters that depend on language -->
+    <script src="shared/parameters.js"></script>
+    <script src="shared/normsinverz.js"></script>
+    <script src="shared/statCalculation.js"></script>
+    <script src="shared/mplHelpers.js"></script>
+    <script src="shared/anglesFunctions.js"></script>
+    <script src="shared/arithmeticFunctions.js"></script>
+
+    <script src="static/js/jspsych-6.1.0/jspsych.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-html-button-response.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-instructions.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-call-function.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-survey-html-form.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-survey-multi-choice.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-survey-multi-select.js"></script>
+    <script src="static/js/jspsych-6.1.0/plugins/jspsych-survey-text.js"></script>
+    <script src="shared/stimuliNback.js"></script>
+    <script src="shared/createBlocks.js"></script>
+    <script src="shared/spanFunctions.js"></script>
+    <script src="shared/slidersFunctions.js"></script>
+    <script src="shared/stimuliNbackVisual.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="shared/flanker_parameters.js"></script> -->
+    <script src="shared/stimuliFlanker.js"></script>
+    <!-- <script src="shared/createFlankerBlock.js"></script> -->
+    <link href="static/js/jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body></body>
+<script>
+    function submitToJatos(final_results) {
+        if (final_results === undefined) final_results = jsPsych.data.get().json();
+        const results = JSON.parse(final_results);
+        const final_payoff = results.slice(-1)[0].totalPayment;
+        jatos.submitResultData(final_results, function () {
+            if (jatos.urlQueryParameters === undefined || jatos.urlQueryParameters.label === undefined) { jatos.endStudy() }
+            else {
+                // console.log(jatos.urlQueryParameters.label,final_payoff)
+                // alert(final_payoff+", "+final_gain)
+                let sitestart = 'https://leep-redirect-iban.s2ch.fr/room/CES2025N2';
+                let key = 'quahceiK6weif1Ao';
+                const passdata = { gain: final_payoff, pass: key };
+                let redirect_link = sitestart + '?data=' + encodeURIComponent(JSON.stringify(passdata)); //&participant_label='+jatos.urlQueryParameters.label+'
+                jatos.endStudyAndRedirect(redirect_link, true, "Label " + jatos.urlQueryParameters.label + ", gain " + final_payoff);
+            }
+        }, function () {
+            console.log('an error occured, please check your connection, trying again in 1 second...');
+            setTimeout(submitFunction, 1000, final_payoff, final_results);
+            document.write("<h4>Erreur d'envoi des données. Veuillez verifier votre connexion à l'Internet. Nouvelle tentative dans une seconde...</h4>");
+        });
+    }
+</script>
+<!-- <script src="online/experimentSpanMPL.js" type='text/javascript'> </script> -->
+<!-- <script src="online/experimentSpanMPLMixedMPL.js" type='text/javascript'> </script> -->
+<script>
+    jatos.onLoad(function () {
+        console.log("jatos.urlQueryParameters is", jatos.urlQueryParameters);
+        if (jatos !== undefined && jatos.urlQueryParameters !== undefined && jatos.urlQueryParameters.label !== undefined) {
+            console.log("label is", jatos.urlQueryParameters.label)
+            if (["MOS", "SOF", "ROM", "HEL", "BRU", "BUD", "VAR", "PRA", "ZUR", "RIG", "LAB", "BOX1"].includes(jatos.urlQueryParameters.label)) {
+                treatment = "easy"
+            }
+            else { treatment = "hard" }
+        }
+        console.log("treatment is", treatment)
+        $.getScript("experiment.js");
+    });
+</script>
+
+
+</html>

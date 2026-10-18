@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Grilles superposées</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: white;
+    }
+    .stack {
+      position: relative;
+      width: 180px; /* largeur suffisante pour contenir le décalage */
+      height: 140px;
+    }
+    .grid {
+      position: absolute;
+      top: 0; left: 0;
+      width: 140px;
+      height: 140px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      background: white;
+      border: 1.5px solid #aaa;
+      border-radius: 6px;
+      padding: 4px;
+    }
+    .cell {
+      position: relative;
+      background: #f8f8f8;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      aspect-ratio: 1 / 1;
+    }
+    .dot {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 28%; height: 28%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: #111;
+    }
+  </style>
+</head>
+<body>
+  <div class="stack" id="stack"></div>
+
+  <script>
+    function makeGrid(dotPos, offset) {
+      const grid = document.createElement("div");
+      grid.className = "grid";
+      grid.style.transform = `translateX(${offset}px)`; // décalage horizontal uniquement
+      grid.style.opacity = 1; // légère transparence pour voir la pile
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        if (i === dotPos) {
+          const dot = document.createElement("div");
+          dot.className = "dot";
+          cell.appendChild(dot);
+        }
+        grid.appendChild(cell);
+      }
+      return grid;
+    }
+
+    const stack = document.getElementById("stack");
+    for (let i = 0; i < 10; i++) {
+      const pos = Math.floor(Math.random() * 9);
+      stack.appendChild(makeGrid(pos, i * 20)); // décalage horizontal
+    }
+  </script>
+</body>
+</html>
