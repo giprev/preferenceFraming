@@ -60,7 +60,33 @@ if (nrow(round_trip_data) != nrow(trial_data)) {
     stop("CSV validation failed: the row count changed after writing.")
 }
 
+excluded_columns <- c(
+    "success",
+    "trial_type",
+    "trial_index",
+    "internal_node_id",
+    "participant_record",
+    "view_history"
+)
+
+analysis_data <- round_trip_data %>%
+    select(-any_of(excluded_columns))
+
+if (nrow(analysis_data) != nrow(round_trip_data)) {
+    stop("Analysis dataframe validation failed: the row count changed after column selection.")
+}
+
+if (n_distinct(analysis_data$subject) != n_distinct(round_trip_data$subject)) {
+    stop("Analysis dataframe validation failed: the participant count changed.")
+}
+
+if (any(excluded_columns %in% names(analysis_data))) {
+    stop("Analysis dataframe validation failed: an excluded column is still present.")
+}
+
 cat("Participant records:", length(participant_records), "\n")
 cat("Trial rows:", nrow(trial_data), "\n")
 cat("Columns:", ncol(trial_data), "\n")
+cat("Analysis dataframe rows:", nrow(analysis_data), "\n")
+cat("Analysis dataframe columns:", ncol(analysis_data), "\n")
 cat("CSV written to:", CSV_FILE, "\n")

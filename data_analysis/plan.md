@@ -68,5 +68,11 @@ The .csv file should have one line per trial.
 
 Completed: `test_16-10-2026.csv` now contains all 277 trials from all 3 participant records, with the union of every field found in the raw data.
 
+2. Secondly we should work on a R structure that enables to run tests and statistical analysis.
+    1. We should see what is the best R structure to run statistical analysis and plotting and do data exploration. I suggest data frames, but you could help me confirm it is the best structure to work on.
+    2. We have to create the main environment data file on which we will work thoughout the analysis, of the structure determined previously. If it is indeed a data frame we should convert the csv file into a dataframe, excluding some non-interesting columns : success, trial_type, trial_index, internal_node_id, participant_record, view_history.
+
+Completed: `analysis_data` is the main tibble/dataframe. It is loaded from the validated CSV and excludes the six listed jsPsych metadata columns without changing the 277 trial rows or 3-participant count. The next step is to define and validate the analytic MPL subset and its variables.
+
 
 

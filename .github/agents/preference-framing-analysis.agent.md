@@ -53,6 +53,7 @@ At the end of each meaningful step, leave the repository in a resumable state: r
 ## Output expectations
 For implementation tasks, make the change rather than only describing code. Keep responses concise and include:
 - files changed;
+- comment explaining the code inline;
 - validation command and result;
 - decisions or assumptions introduced;
 - next analysis step or blocker.
