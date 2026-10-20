@@ -10,7 +10,7 @@ Secondly, we would like to know if the preference framing increases sensitivity 
 
 ## Experimental design
 
-Each participant fills some demographics. Then sees the instructions for the MPL part and answers comprehension question regarding the MPLs. Participants are either in the preference treatment first or in the inequalities treatment first (they do one and then the other). Then answers some comprehension questions, and have four trials maximum to answers correctly, and look at the instructions again. Then the participant does a training MPL. Then the participant does all the MPLs (some of which are "super" and some "classic"). Then he or she see the instructions of the MPLs for the other treatment again, answers the comprehension questions again and do a training MPL again. Then he or she complete the MPLs for the other treatment. Then the participants answers some questions about their choices (where did they direct their attention, namely, for each treatment).
+Each participant fills some demographics. Then sees the instructions for the MPL part and answers comprehension question regarding the MPLs. Participants are either in the preference treatment first or in the inequalities treatment first (they do one and then the other). Then answers some comprehension questions, and have four trials maximum to answers correctly, and look at the instructions again. Then the participant does a training MPL. Then the participant does all the MPLs (some of which are "super" and some "classic"). Then he or she see the instructions of the MPLs for the other treatment again, answers the comprehension questions again and do a training MPL again. Then he or she complete the MPLs for the other treatment. Then the participants answers some questions about their choices (where did they direct their attention, namely, for each treatment). Remember that here no "lotteries" are actually involving risk, they are actually deterministic mirrors of lotteries, payinf deterministally the average amount in the option. 
 
 Then the last part of the experiment consists of 5 arithmetic questions that ask the participant to give the answer to a calculus that is used to find the expected value of the lotteries in the gain domain they had seen. The goal is to see if some MPLs were harder than others, and to see the participant's heterogeneity in arithmetic. 
 
@@ -74,7 +74,18 @@ Completed: `test_16-10-2026.csv` now contains all 277 trials from all 3 particip
 
 Completed: `analysis_data` is the main tibble/dataframe. It is loaded from the validated CSV and excludes the six listed jsPsych metadata columns without changing the number of trial rows or number of participants. 
 
+3. Thirdly we aim to make add some data of interest in the dataframe. Namely, we want to calculate for each mpl trial that is not part of the instruction what is the corresponding certainty equivalent. This depends on the swtiching point of the participant, the mplType and the choices. We also want to create a binary named "switch", which indicates whether the participant switched or not. 
+    - Create a column named CE for the certainty equivalents and LE for the lottery equivalent and put the results there.
+    - Select trials for which task = mpl and block == exemple_span_mpl or mpl_incentives.
+    - calculate the certainty equivalents. For GO and LO mpls, there are 25 rows, with sure amount ranging from 1 in row 1 to 25 in row 25, with increments of 1, for gains mpls (GO) and from -25 to -1 in loss mpls (LO). The lottery yields 25 times it's number of percentage (e.g. GO 25 yields 25% of 25) and losses yields the negative values (e.g. LO25 yields 25% of -25). Take the certainty equivalent as the midpoint between sure amounts. For mixed tasks (gain and loss mixed, mplType starting with "A"), the sure amount is fixed at 0 and the lottery is composed of a first amount of -10 (for AO10) or -25 (for AO15) and a second amount that starts from 2 in row 1 up to 50 in row 25, increasing by 2 units for each row. We compute the lottery equivalent of the sure amount 0 by taking the midpoint between the values of the lotteries at the switching point. 
+    For participants who did not switch, look at their choices, and calculate the CE or LE as follows :
+        -  if the participant selected only lotteries in GO mpls, it is 25.5, only sure amouns 0.5.
+        - For losses only lottery it is -0.5, only sure amount it is -25.5. 
+        - For mixed mpls, only lottery it is the value of the first lottery -0.5 and only sure amount it is the highest amount +0.5.
+    -  for mpls chosen in an inversed order, i.e. choosing sure amounts first and then lotteries for GO and lotteries first then sure-amounts for LO and AO mpls, ce column should indicate NA. 
 
+Completed: `calculate_mpl_equivalents()` now adds `CE`, `LE`, and `switch` to `analysis_data` for 84 experimental MPL rows (`task == "mpl"` in `exemple_span_mpl` or `mpl_incentives`). Gain/loss MPLs use midpoint certainty equivalents; mixed MPLs use midpoint lottery equivalents with a fixed certainty equivalent of 0. No-switch bounds, timeouts, malformed rows, and the documented inverted orders are handled explicitly.
+    
 
 
 
