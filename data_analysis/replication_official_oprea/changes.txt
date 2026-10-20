@@ -1,0 +1,5 @@
+
+V1:  Original version
+
+V2:  All results are the same.  Data files in data/raw have been fully anonymized, with all subjects being assigned a unique 10-digit code.  These ID's replace variables Perm (in student1_raw.csv, student2_raw.csv, student3_raw.csv,student4_raw.csv and student5_raw.csv) and variables PROLIFIC_ID and ID (in 4box_raw.csv, bdm_raw.csv, error1_raw.csv, error2_raw.csv and mpl_raw.csv).   IPddress has been replaced with '' in all raw files.  VenmoID and Name have been replaced with '' in student1_raw.csv, student2_raw.csv, student3_raw.csv, student4_raw.csv and student5_raw.csv.  In form_dataset.R I updated a line that removes two duplicate subjects (on line 42 ) so it does so using these subjects' new random IDs.  Updated MPL.qsf which was previously non-functional with functional version.
+
