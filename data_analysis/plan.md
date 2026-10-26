@@ -84,8 +84,10 @@ Completed: `analysis_data` is the main tibble/dataframe. It is loaded from the v
         - For mixed mpls, only lottery it is the value of the first lottery -0.5 and only sure amount it is the highest amount +0.5.
     -  for mpls chosen in an inversed order, i.e. choosing sure amounts first and then lotteries for GO and lotteries first then sure-amounts for LO and AO mpls, ce column should indicate NA. 
 
-Completed: `calculate_mpl_equivalents()` now adds `CE`, `LE`, and `switch` to `analysis_data` for 84 experimental MPL rows (`task == "mpl"` in `exemple_span_mpl` or `mpl_incentives`). Gain/loss MPLs use midpoint certainty equivalents; mixed MPLs use midpoint lottery equivalents with a fixed certainty equivalent of 0. No-switch bounds, timeouts, malformed rows, and the documented inverted orders are handled explicitly.
+Completed: `calculate_mpl_equivalents()` now adds `CE`, `LE`, and `switch` to `analysis_data` for the experimental MPL rows (`task == "mpl"` in `example_span_mpl` or `mpl_incentives`). The current test data contain 90 such rows. Gain/loss MPLs use midpoint certainty equivalents; mixed MPLs use midpoint lottery equivalents with a fixed certainty equivalent of 0. No-switch bounds, timeouts, malformed rows, and the documented inverted orders are handled explicitly.
+
+Step 4 completed: `prepare_mpl_plot_data()` creates the validated summary input for `main_plot()`, and `main_plot()` now produces the three-panel Oprea-style deviation plot for gains, losses, and mixed MPLs. It supports treatment framing (`mirror` versus `inequalities`) and incentive status (`classic` versus `super`), with mean deviations, error bars, and pooled observations.
     
 
-
+4. The next step is to plot the mean of the Certainty equivalent (CE) and Lottery equivalent (LE), grouped by probability, type of mpl (G, L or A), probability, and treatment (mirror or inequalities). Oprea's treatments are mirrors and lotteries, just take the same graphical distinction but for ours. Then produce the same plot but with treatment isSuper. You should take as a working basis the code in analysisOprea.R, the function main_plot(). You should also understand what data the plot takes as input state it clearly and produce a function that yiedls the data that the main_plot function then uses. You should first show this function, and once i validate it, build main_plot().
 

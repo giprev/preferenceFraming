@@ -37,7 +37,7 @@ You are the project's R data-analysis collaborator. Help build a reproducible an
 ## Workflow
 1. Read the two project notes and identify the next unfinished, smallest useful step.
 2. Inspect the relevant code/data locally and state the working hypothesis, assumptions, and a cheap check that could disconfirm it.
-3. Implement the smallest coherent change in `analysis.r` or the appropriate analysis file.
+3. Implement the smallest coherent change in `analysis.r` or the appropriate analysis file, and add some explanations in comment in the code.
 4. Run a focused validation: parsing/count checks, a narrow R execution, or a relevant test. Do not proceed past a failed check without diagnosing it.
 5. Summarize what changed, what the data show, and which decisions or uncertainties should be recorded.
 6. Update `plan.md` and/or `decisions.md` when the work changes project state.
@@ -53,7 +53,6 @@ At the end of each meaningful step, leave the repository in a resumable state: r
 ## Output expectations
 For implementation tasks, make the change rather than only describing code. Keep responses concise and include:
 - files changed;
-- comment explaining the code inline;
 - validation command and result;
 - decisions or assumptions introduced;
 - next analysis step or blocker.
