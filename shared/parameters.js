@@ -7,13 +7,13 @@ const letterDuration = 1500; //1500ms
 const feedBackDuration = 1000;//1000ms
 const basePayment_hard = 6; //
 const basePayment_easy = 6; // 
-const notUnderstoodPayment = 6; 
+const notUnderstoodPayment = 6;
 const spanMplPayment_hard = 3.3;
 const calibrationPayment = 1; // 1.03€ rounded
 const spanSpanPayment_hard = 1;// 1.03€ rounded
 const spanMplPayment_easy = spanMplPayment_hard;
 //const spanSpanPayment_easy = spanMplPayment_hard * 0.25; // NOT USED as it's the same as spanSpanPayment_hard
-const propSelecForMPL = 11; // 1 out of propSelecForMPL participants will be selected for the MPL payment : that makes an EV of around 2.1€.
+const propSelecForMPL = 5; // 1 out of propSelecForMPL participants will be selected for the MPL payment
 const fds_letter_presentation = 500; //500ms
 const fds_post_trial_gap = 250; //250ms
 // Change default language to French
@@ -34,7 +34,7 @@ let block_start;
 let block_time_limit;
 let items_flanker = Array.from(Array(16).keys()); // Array from 0-15
 let blockEasy = 0;
-let nAngles = 20 ; // number of angles to generate for the angles motivation task
+let nAngles = 20; // number of angles to generate for the angles motivation task
 
 const arithmeticPayment = 0.15; // 0.02€ per correctly solved sum in the arithmetic task, task, 
 const nRoundsArithmetic = 4; // number of rounds in the arithmetic task (each round is 1 minute long)
@@ -42,12 +42,12 @@ const nRoundsArithmetic = 4; // number of rounds in the arithmetic task (each ro
 let totalFdsSpanMplTrials = 16; // 14 of Oprea plus two originals from Oprea
 let treatment = "";
 if (Math.random() < 0.5) { treatment = "hard"; } else { treatment = "easy"; }
-if (jatos!==undefined && jatos.urlQueryParameters !== undefined && jatos.urlQueryParameters.label !== undefined) {
+if (jatos !== undefined && jatos.urlQueryParameters !== undefined && jatos.urlQueryParameters.label !== undefined) {
     console.log("label is", jatos.urlQueryParameters.label)
     if (["MOS", "SOF", "ROM", "HEL", "BRU", "BUD", "VAR", "PRA", "ZUR", "RIG", "LAB", "BOX1"].includes(jatos.urlQueryParameters.label)) {
         treatment = "easy"
     }
-    else {treatment = "hard"}
+    else { treatment = "hard" }
 }
 
 let treatmentGoal = '';

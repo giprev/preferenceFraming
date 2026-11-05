@@ -2,6 +2,7 @@ rm(list = ls())
 
 setwd("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis")
 PATH_TO_DATA <- "/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis/data/"
+PATH_TO_DATA <- "/Users/domitilleprevost/Downloads/"
 dir.create(file.path(PATH_TO_DATA, "figures_test_16102026"), showWarnings = FALSE, recursive = TRUE)
 getwd()
 
@@ -9,7 +10,9 @@ library(jsonlite)
 library(dplyr)
 library(readr)
 
+
 RAW_FILE <- file.path(PATH_TO_DATA, "test_16-10-2026.txt")
+RAW_FILE <- file.path(PATH_TO_DATA, "jatos_results_data_20261027100839.txt") # one file generated via the online experiment with one subject (me)
 CSV_FILE <- file.path(PATH_TO_DATA, "test_16-10-2026.csv")
 
 raw_lines <- readLines(RAW_FILE, warn = FALSE)

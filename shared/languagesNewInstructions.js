@@ -22,7 +22,7 @@ const en = {
         question: "If you have any questions or requests, please email gildas.prevost@etu.univ-paris1.fr.",
         withdrawal: "You are free to withdraw from the experiment at any time without penalty.",
         clickNext: "Click on <strong>Next</strong> to continue!"
-    },    
+    },
     descriptionExperimentNback: {
         title: "Description of the experiment",
         twoGames: "You will have two different tasks to play: the visual 2-back and the letter n-back.",
@@ -30,14 +30,14 @@ const en = {
         subBlockExplanation: "The experiment consists of 12 subBlocks. One block consists of a visual 2-back task and then a letter n-back task.",
         paymentAfter: "So you understand how you will be paid, you will receive the payment instructions after the task guidelines.",
         clickNext: "Click on <strong>Next</strong> to continue!"
-        
+
     },
     instructions0back: {
         letter: "In this task, <strong>letters</strong> will appear on the screen consecutively.",
         yourTask1: "Your task will be <strong>to press the key 'J' if you see the letter <strong style='color:red'>X</strong> on the screen.</strong>",
         yourTask2: "Otherwise, press the <strong>key 'F'</strong>.</p>",
         image: "<img src='static/images/instruction_0back_en.gif' />"
-    },    
+    },
     instructions1back: {
         letter: "In this task, <strong>letters</strong> will appear on the screen consecutively.",
         changeN: "Now you will switch to a different n-back level.",
@@ -92,10 +92,10 @@ const en = {
     },
     betweenBlocks: {
         rest: "Now you can rest a little.",
-        continue:"Press any key to continue the task!",
-        pressKey:"If you are ready, press a key!"
+        continue: "Press any key to continue the task!",
+        pressKey: "If you are ready, press a key!"
     },
-    end:  {
+    end: {
         end: "End of the task.",
         thankYou: "Thank you!",
     },
@@ -344,7 +344,7 @@ const en = {
         title: "Training Complete - Scoring Demonstration",
         performance: "Here's how your performance would be scored if this were a real block:",
         beforeVisual: "Letters before visual 2-back: {accuracy}% accuracy ({correct}/{total} trials)",
-        visualNback: "Visual n-back: {accuracy}% accuracy ({correct}/{total} trials)", 
+        visualNback: "Visual n-back: {accuracy}% accuracy ({correct}/{total} trials)",
         afterVisual: "Letters after visual 2-back: {accuracy}% accuracy ({correct}/{total} trials)",
         explain1Back: "The last letter before the visual 2-back was K, and the first letter after was C. Therefore you had to press the key 'F' when seeing the 'C' after the visual nback.",
         explain2Back: "The last two letters before the visual 2-back were 'A' and 'P', and the first two letters after were 'P' and 'K'. Therefore you had to press the key 'F' when seeing the 'P' and 'K' after the visual nback ('P' different from 'A' and 'K' from 'P').",
@@ -354,7 +354,7 @@ const en = {
         remember: "Remember: Always keep the last few letters in mind during the visual task!",
         continue: "Press any key to continue to the main experiment.",
         remindAfter3Back: {
-            0:"To answer correctly to the next letter, you should think about the last last last letter <strong style='color:red;'>before the visual 2-back</strong>.",
+            0: "To answer correctly to the next letter, you should think about the last last last letter <strong style='color:red;'>before the visual 2-back</strong>.",
             1: "To answer correctly to the next letter, you should think about the last last letter <strong style='color:red;'>before the visual 2-back</strong>.",
             2: "To answer correctly to the next letter, you should think about the last letter <strong style='color:red;'>before the visual 2-back</strong>.",
         },
@@ -363,7 +363,7 @@ const en = {
             1: "To answer correctly to the next letter, you should think about the last letter <strong style='color:red;'>before the visual 2-back</strong>.",
         },
         remindAfter1Back: "To answer correctly to the next letter, you should think about the last letter <strong style='color:red;'>before the visual 2-back</strong>.",
-        remindBeforeHard:"Remember the following letters well to answer correctly at the first letter after the visual 2-back!",
+        remindBeforeHard: "Remember the following letters well to answer correctly at the first letter after the visual 2-back!",
         remindBefore1Back: "Remember this letter well to answer correctly at the first letter after the visual 2-back!",
     },
 
@@ -428,82 +428,82 @@ const en = {
         surveyAgain: "Then you will take the survey again.",
     },
     demographics: {
-    preamble: "<strong>Demographics</strong>",
-    questions: [
-        "How old are you?",
-        "Gender:",
-        "Education level: (if you are a student, please choose the degree your are currently enrolled in)",
-        "Work status:",
-        "What is the range of your monthly income?",
-        "Overall, how satisfied are you with your life nowadays?"
-    ],
-    options: {
-        age: [
-            "Under 18",
-            "18-24",
-            "25-34",
-            "35-44",
-            "45-54",
-            "55-64",
-            "65 or older",
-            "Prefer not to say"
+        preamble: "<strong>Demographics</strong>",
+        questions: [
+            "How old are you?",
+            "Gender:",
+            "Education level: (if you are a student, please choose the degree your are currently enrolled in)",
+            "Work status:",
+            "What is the range of your monthly income?",
+            "Overall, how satisfied are you with your life nowadays?"
         ],
-        gender: [
-            "Male",
-            "Female",
-            "Other",
-            "Prefer not to say"
-        ],
-        education: [
-            "Less than a high school diploma",
-            "High school degree or equivalent (e.g. GED)",
-            "Some college, no degree",
-            "Associate degree (e.g. AA, AS)",
-            "Bachelor’s degree (e.g. BA, BS)",
-            "Master’s degree (e.g. MA, MS, MEd)",
-            "Professional degree (e.g. MD, DDS, DVM)",
-            "Doctorate (e.g. PhD, EdD)",
-            "Prefer not to say"
-        ],
-        work: [
-            "Full-time employee (40 or more hours per week)",
-            "Part-time employee (up to 39 hours per week)",
-            "Unemployed - currently looking for work",
-            "Unemployed - currently not looking for work",
-            "Furlough",
-            "Student",
-            "Retired",
-            "Homemaker",
-            "Self-employed",
-            "Unable to work",
-            "Prefer not to say"
-        ],
-        income: [
-            "Less than €500",
-            "Between €500 and €1000",
-            "Between €1000 and €1500",
-            "Between €1500 and €2000",
-            "Between €2000 and €3000",
-            "Between €3000 and €5000",
-            "More than €5000",
-            "Not applicable",
-            "Prefer not to say"
-        ],
-        life: [
-            "0 (not at all)",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10 (very)",
-            "Prefer not to say"
-        ]
-    },
+        options: {
+            age: [
+                "Under 18",
+                "18-24",
+                "25-34",
+                "35-44",
+                "45-54",
+                "55-64",
+                "65 or older",
+                "Prefer not to say"
+            ],
+            gender: [
+                "Male",
+                "Female",
+                "Other",
+                "Prefer not to say"
+            ],
+            education: [
+                "Less than a high school diploma",
+                "High school degree or equivalent (e.g. GED)",
+                "Some college, no degree",
+                "Associate degree (e.g. AA, AS)",
+                "Bachelor’s degree (e.g. BA, BS)",
+                "Master’s degree (e.g. MA, MS, MEd)",
+                "Professional degree (e.g. MD, DDS, DVM)",
+                "Doctorate (e.g. PhD, EdD)",
+                "Prefer not to say"
+            ],
+            work: [
+                "Full-time employee (40 or more hours per week)",
+                "Part-time employee (up to 39 hours per week)",
+                "Unemployed - currently looking for work",
+                "Unemployed - currently not looking for work",
+                "Furlough",
+                "Student",
+                "Retired",
+                "Homemaker",
+                "Self-employed",
+                "Unable to work",
+                "Prefer not to say"
+            ],
+            income: [
+                "Less than €500",
+                "Between €500 and €1000",
+                "Between €1000 and €1500",
+                "Between €1500 and €2000",
+                "Between €2000 and €3000",
+                "Between €3000 and €5000",
+                "More than €5000",
+                "Not applicable",
+                "Prefer not to say"
+            ],
+            life: [
+                "0 (not at all)",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10 (very)",
+                "Prefer not to say"
+            ]
+        },
     },
     prolificID: "Please enter your Prolific ID:",
     redirectProlific: "You will be automatically redirected to Prolific in 3 seconds...",
@@ -536,7 +536,7 @@ const fr = {
     overviewPage: {
         //purpose: "Cette expérience porte sur la prise de décision et la mémoire.",
         // procedure: "Elle comprend des tâches de mémoire et des tâches de prise de décision.",
-       //  IRB: "Cette expérience a été approuvée par l'Institutional Review Board (comité d'éthique) de Paris School of Economics, numéro d'approbation XXXXX.",
+        //  IRB: "Cette expérience a été approuvée par l'Institutional Review Board (comité d'éthique) de Paris School of Economics, numéro d'approbation XXXXX.",
         thanks: "Merci de participer à cette expérience.",
         anonimity: "Toutes les données collectées sont anonymes et seront utilisées à des fins de recherche uniquement.",
         // credits: "Cette expérience est menée par l'étudiant en master Gildas Prévost sous la supervision du professeur Dr. Bastien Blain, tous deux à l'Université Paris 1 Panthéon-Sorbonne.",
@@ -589,7 +589,7 @@ const fr = {
     //     description: "À chaque tour, une séquence de chiffres s'affichera. Vous devrez la restituer dans le même ordre à l'aide d'un clavier à l'écran.",
     //     clickNext: "Cliquez sur <strong>Suivant</strong> pour continuer."
     // },
-    instructionCalibration:{
+    instructionCalibration: {
         title: "Instructions pour la Partie 1.",
         rounds: "Dans cette partie, vous allez jouer 9 tours du jeu des chiffres.",
         //description: "À chaque tour, vous verrez une séquence de chiffres et vous devrez la retaper dans le même ordre dans lequel elle a été vue.",
@@ -599,7 +599,7 @@ const fr = {
         meanDuration: "Cette partie dure environ 3 minutes.",
         clickNext: "Cliquez sur <strong>Suivant</strong> pour commencer la première partie."
     },
-    debriefCalibration:{
+    debriefCalibration: {
         title: "Fin de la première partie",
         performance: "La longueur finale (après la prise en compte de votre succès ou échec final) est de {maxSpan}.",
         bonus: "Votre bonus pour cette partie est donc de {bonus}€ x {units} = <b>{totalBonus}€</b>.",
@@ -623,7 +623,7 @@ const fr = {
     //     clickNext: "Cliquez sur <strong>Suivant</strong> pour découvrir le bonus de la deuxième partie !"
 
     // },
-    instructionsSpanSpan:{
+    instructionsSpanSpan: {
         title: "Instructions pour la Partie 2.",
         description: "Dans cette partie, vous allez jouer 6 tours du jeu des chiffres, mais avec des règles légèrement différentes :",
         lettersOrder: `Vous verrez une séquence composée de {someBlueDigits} puis une séquence composée de chiffres <span style='color:red'>rouges</span>. 
@@ -634,7 +634,7 @@ const fr = {
         bonusRed: `<b>33%</b> du bonus dépend de votre précision pour les chiffres <span style='color:red'>rouges</span>.`,
         incentiveRuleExample: "Par exemple, si au tour sélectionné vous obtenez une précision de 100% sur {theBlueDigits} mais seulement 10% sur les chiffres <span style='color:red'>rouges</span>, votre bonus sera de <b>{bonus}€ x (<span style='color:blue'>0.67 x 100%</span> + <span style='color:red'>0.33 x 10%</span>) = {examplePayment}€.</b>",
         reminder: "Rappel: La précision correspond à la proportion de chiffres correctement restitués dans la bonne position. Si vous saisissez plus de chiffres que la séquence n’en contient, les chiffres supplémentaires comptent comme des erreurs.",
-        remember:  `<div class="important-note">
+        remember: `<div class="important-note">
                     💡 À retenir: retenez {theBlueDigits} en priorité, même pendant la présentation des chiffres <span style='color:red'>rouges</span>. Votre bonus dépend avant tout de la restitution correcte {theBlueWithDu} ! 
                 </div>`,
         variableHard: {
@@ -642,14 +642,14 @@ const fr = {
             theBlueDigits: "les chiffres <span style='color:blue'>bleus</span>",
             the: "les",
             displayed: "affichés",
-            theBlueWithDu : "des chiffres <span style='color:blue'>bleus</span>"
+            theBlueWithDu: "des chiffres <span style='color:blue'>bleus</span>"
         },
         variableEasy: {
             someBlueDigits: "1 chiffre <span style='color:blue'>bleu</span>",
             theBlueDigits: "le chiffre <span style='color:blue'>bleu</span>",
             the: "le",
             displayed: "affiché",
-            theBlueWithDu : "du chiffre <span style='color:blue'>bleu</span>"
+            theBlueWithDu: "du chiffre <span style='color:blue'>bleu</span>"
         },
         clickNext: "Cliquez sur <strong>Suivant</strong> pour commencer la Partie 2.",
     },
@@ -658,7 +658,7 @@ const fr = {
         theBlueDigitWillBePresented: "Le chiffre <span style='color:blue'>bleu</span> va être présenté.",
         theRedDigitsWillBePresented: "Les chiffres <span style='color:red'>rouges</span> vont être présentés.",
     },
-    debriefSpanSpan:{
+    debriefSpanSpan: {
         title: "Fin de la deuxième partie",
         performance: "Pour le tour sélectionné, votre précision pour {theBlueDigits} est de {blueAccuracy}%, et votre précision pour les chiffres <span style='color:red'>rouges</span> est de {redAccuracy}%.",
         bonus: "Votre bonus pour cette partie est donc de {bonus}€ x (0.67 x {blueAccuracy}% + 0.33 x {redAccuracy}%) = <b>{totalBonus}€</b>.",
@@ -673,14 +673,14 @@ const fr = {
     //     freqMPL: "<b>En moyenne, une personne sur {frequency}</b> sera sélectionnée à la fin de l'expérience pour qu'<b>un de ses choix à la tâche des choix soit réellement payé</b>. Le bonus pour le jeu des chiffres est lui calculé <b>pour chaque personne</b>.",
     //     clickNext: "Cliquez sur <strong>Suivant</strong> pour découvrir la tâche des choix."
     // },
-    instructionsDecisionTable:{
+    instructionsDecisionTable: {
         // title: "Instructions pour la tâche des choix.",
         title: "Instructions pour la Partie 3.",
         titleIncentives: "Instructions.",
         description: "Dans cette partie, vous allez jouer au jeu des chiffres et à une nouvelle tâche, nommée <b>\"la tâche des choix\"</b>. Découvrons d'abord les instructions de la tâche des choix.",
         descriptionIncentives: 'Dans cette expérience, vous allez jouer à "la tâche des choix".',
-        subTitle: "Qu'allez vous faire ? Vous devez choisir le lot que vous préférez entre le <span style='color:red'>lot A</span> et le <span style='color:blue'>lot B</span>.",
-        subTitleInequalities: "Qu'allez vous faire ? Vous devez choisir le lot qui rapporte le plus entre le <span style='color:red'>lot A</span> et le <span style='color:blue'>lot B</span>.", // in the inequalities treatment
+        subTitle: "Qu'allez vous faire ? Vous devez choisir le lot que vous <em>préférez</em> entre le <span style='color:red'>lot A</span> et le <span style='color:blue'>lot B</span>.",
+        subTitleInequalities: "Qu'allez vous faire ? Vous devez choisir le lot qui <em>rapporte le plus</em> entre le <span style='color:red'>lot A</span> et le <span style='color:blue'>lot B</span>.", // in the inequalities treatment
         titleSecondInstructions: "Nouvelle règle de paiement",
         descriptionBoxes: `Chaque lot contient 100 boîtes.`,
         descriptionMoney: "Chaque boîte peut contenir de l'argent (positif ou négatif).",
@@ -722,7 +722,7 @@ const fr = {
         clickNext: "Cliquez sur <strong>Suivant</strong> pour découvrir comment choisir un lot.",
         clickNextSecond: "Cliquez sur <strong>Suivant</strong> pour répondre à la dernière partie des questions de compréhension."
     },
-    instructionsClickToChoose:{
+    instructionsClickToChoose: {
         title: "Instructions pour la tâche des choix.",
         clickToChoose: `Pour choisir un lot vous devez cliquer sur le tableau. Le lot choisi est surligné en <span style='background-color: rgba(239, 243, 4, 1)'>jaune</span>.`,
         clickToChooseExample: `Ici le lot choisi est le <span style='color:red'>lot A</span>.`,
@@ -742,7 +742,7 @@ const fr = {
     l'expérience se terminera et vous serez payé·e {basePaymentMPLIncentives}€. 
     <br>
     Vous pouvez cliquer sur le bouton en haut à droite pour afficher les instructions.`,
-    comprehensionFailure:{
+    comprehensionFailure: {
         title: "Fin de l'expérience",
         description: `Malheureusement, vous n'avez pas répondu correctement aux questions de compréhension.
         L'expérience se termine ici. Vous serez payé·e {notUnderstoodPayment}€ pour votre temps, en plus des bonus précédents ({actual_payment_calibration}€ pour la première partie et {actual_payment_span_span}€ pour la deuxième partie).`,
@@ -782,8 +782,8 @@ const fr = {
                 "-100€",
             ],
         },
-        q3 : {
-            promptIncentives: `Dernière question : pour chaque choix, que devez-vous faire ?`,
+        q3: {
+            promptIncentives: `Dernière question : pour chaque choix, quelle est l'instruction qui vous a été donnée ?`,
             optionsMain: [
                 `Choisir l'option qui rapporte le plus.`,
                 `Choisir l'option que je préfère.`,
@@ -858,19 +858,25 @@ const fr = {
         severalTablesDescriptionIncentives: `<b>Le bonus</b> sera calculé de la manière suivante :`,
         incentivesMPL1: `Vous avez en moyenne une chance sur {propSelecForMPL} d'être sélectionné·e au hasard pour avoir ce bonus. Si c'est le cas l'ordinateur sélectionnera <b>au hasard un tour puis une ligne (version) du tableau que vous avez vu ce tour-là</b>, 
         puis déterminera votre paiement <b>selon votre choix pour cette ligne</b>.`,
-        incentivesMPL1Incentives: `Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un des ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
-        Si c'est le cas l'ordinateur sélectionnera <b>au hasard un <span style='color: #D4AF37'>💰 Super Tour 💰</span> puis une ligne (version) du tableau que vous avez vu à ce tour là</b>, 
-        puis vous payera ce que rapporte le lot que vous avez choisi à cette ligne.`,
-        roundIncentivized: `Les autres tours (<span style='color: #275293df'><b>Tours Classiques</b></span>) ne seront <b>pas payés</b>. Avant chaque tour vous serez prévenu·e s’il s’agit d’un <span style='color: #D4AF37'><b>💰 Super tour 💰</b></span> ou d’un <span style='color: #275293df'><b>Tour Classique</b></span>.`,
-        instructionsMoreIncentivizedRound: `Certains tours sont des <b>"super tours"</b>: ils ont <b>deux fois plus de chance</b> d'être sélectionnés pour le <b>bonus</b> que les autres tours. Avant chaque tour, vous serez prévenu·e s’il s’agit d’un "Super tour" ou d’un <span style='color: #275293df'><b>Tour Classique</b></span>.`,   
+        incentivesMPL1Incentives: `À chaque tour, vous commencez avec une somme d'argent, indiquée en <span style='color:green'>vert</span> en haut de chaque tableau. Elle varie entre les tours.  
+        Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un des ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
+        Si c'est le cas l'ordinateur sélectionne au hasard une ligne (version) du tableau que vous avez vu à ce tour là, et <b>vous paye ce que rapporte le lot que vous avez choisi à cette ligne plus la somme d'argent en "<span style='color:green'>vert</span>"</b>.`,
+        // incentivesMPL1Incentives: `Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un des ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
+        // Si c'est le cas l'ordinateur sélectionnera <b>au hasard un <span style='color: #D4AF37'>💰 Super Tour 💰</span> puis une ligne (version) du tableau que vous avez vu à ce tour là</b>, 
+        // puis vous payera ce que rapporte le lot que vous avez choisi à cette ligne.`,
+        // incentivesMPL1Incentives: `Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un des ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
+        // Si c'est le cas l'ordinateur sélectionnera <b>au hasard un <span style='color: #D4AF37'>💰 Super Tour 💰</span> puis une ligne (version) du tableau que vous avez vu à ce tour là</b>, 
+        // puis vous payera ce que rapporte le lot que vous avez choisi à cette ligne.`,
+        roundIncentivized: `Les autres tours (<span style='color: #275293df'><b>Tours Classiques</b></span>) ne sont <b>pas payés</b>. Avant chaque tour vous serez prévenu·e s’il s’agit d’un <span style='color: #D4AF37'><b>💰 Super tour 💰</b></span> ou d’un <span style='color: #275293df'><b>Tour Classique</b></span>.`,
+        instructionsMoreIncentivizedRound: `Certains tours sont des <b>"super tours"</b>: ils ont <b>deux fois plus de chance</b> d'être sélectionnés pour le <b>bonus</b> que les autres tours. Avant chaque tour, vous serez prévenu·e s’il s’agit d’un "Super tour" ou d’un <span style='color: #275293df'><b>Tour Classique</b></span>.`,
         incentivesMPL2: `L'ordinateur rajoutera une somme initiale d'argent au bonus du choix (si il y en a un). Cette somme dépend du tableau sélectionné. Elle est indiquée en <span style='color:green'>vert</span> en haut de chaque tableau.`,
         CU_ineq: "Après avoir fait votre choix, vous devez indiquer à quel point vous pensez qu'à chaque ligne, vous avez choisi le lot qui rapporte le plus. <b>Répondez honnêtement, votre réponse ne changera pas votre paiement.</b>",
         CU_mirr: "Après avoir fait votre choix, vous devez indiquer à quel point vous pensez qu'à chaque ligne, vous avez choisi le lot qui vous plaît le plus. <b>Répondez honnêtement, votre réponse ne changera pas votre paiement.</b>",
         timeLimit: "Vous aurez {mplTimeLimit} secondes pour faire vos choix à chaque tableau (même sans cliquer sur le bouton Suivant ils seront pris en compte). Cependant si vous êtes sélectionné·e mais qu'au tour choisi au hasard vous n'avez pas fait de choix dans le temps imparti, vous n'obtiendrez pas de bonus.",
         incentivesMPL3: `Faites donc chaque choix comme si c'était celui qui allait être payé !`,
         priority: "Retenez les chiffres même pendant la tâche des choix, le bonus du jeu des chiffres est en moyenne supérieur à celui de la tâche des choix !",
-        clickNext: "Cliquez sur <strong>Suivant</strong> pour effectuer un exemple final."
-        
+        clickNext: "Cliquez sur <strong>Suivant</strong> pour effectuer un exemple final d'un <b>💰 Super Tours 💰</b>."
+
     },
     instructionsMPLIncentives: {
         title: "Instructions finales.",
@@ -894,7 +900,7 @@ const fr = {
         priority: "Retenez les chiffres même pendant la tâche des choix, le bonus du jeu des chiffres est en moyenne supérieur à celui de la tâche des choix !",
         clickNext: "Cliquez sur <strong>Suivant</strong> pour effectuer un exemple final."
     },
-    introductionFinalExampleSpanMPL:{
+    introductionFinalExampleSpanMPL: {
         title: "Exemple final avant de commencer la troisième partie.",
         noTimeLimit: "Pour cet exemple, il n'y a pas de limite de temps.",
         description: "Cliquer sur <b>Suivant</b> pour faire un exemple complet d'un tour de la Partie 3.",
@@ -905,8 +911,8 @@ const fr = {
         paymentSpan: "Pour le <b>jeu des chiffres</b>, {thePresentedDigitWas} {correctSpan}. Vous avez restitué {theDigit} {answerSpan}. Votre précision est de {precision}%. Votre bonus est de <b>{bonusSpan}€ x {precision}% = {paymentSpan}€</b>.",
         paymentMPL: "Pour la <b>tâche des choix</b>, la ligne (version) du tableau sélectionnée au hasard est la ligne {selectedRow}. Pour cette ligne vous avez choisi le {chosenLot}. Après calcul, le paiement pour la tâche des choix s’élèverait à <b>{paymentMPL}€</b>: <span style='color:green'>5€ (la somme initiale)</span> plus le montant déterminé selon votre choix et la règle de paiement à la ligne {selectedRow}.",
         youSelected: "La ligne (version) du tableau sélectionnée au hasard est la ligne {selectedRow}. Pour cette ligne vous avez choisi le {chosenLot}. ",
-        rightChoiceWas : "Il <b>fallait choisir le {rightLot}</b> car il rapportait plus d'argent à cette ligne. ",
-        yourPayment: "Après calcul, le paiement pour la tâche des choix s’élèverait à <b>{paymentMPL}€</b>: <span style='color:green'>5€ (la somme initiale)</span> plus le montant déterminé selon votre choix à la ligne {selectedRow}.",
+        rightChoiceWas: "Il <b>fallait choisir le {rightLot}</b> car il rapportait plus d'argent à cette ligne. ",
+        yourPayment: "Votre paiement serait donc de <b>{paymentMPL}€</b> : {paymentChoice}€ (ce que rapporte le lot que vous avez choisi à la ligne {selectedRow}) + <span style='color:green'>{endowment}€</span> (la somme initiale).",
         remind: "À retenir: <b>en moyenne seulement une personne sur {propSelecForMPL}</b> est sélectionnée pour qu'un de ses choix à la tâche des choix soit payé. Au contraire vous êtes <b>sûr·e d'être sélectionné·e</b> pour le bonus du jeu des chiffres ! Correctement <b>restituer les chiffres est donc le plus important</b> pour maximiser votre gain total.",
         instructionReminder: 'Vous aurez la possibilité d\'afficher de nouveau les instructions pendant la troisième partie, en cliquant sur le bouton "Afficher les instructions".',
         clickNext: "Quand vous êtes prêt·e, cliquez sur <strong>Suivant</strong> pour commencer la tâche des choix."
@@ -951,7 +957,7 @@ const fr = {
         treatmentIneq: "À partir de maintenant, vous devez <b>choisir les lots qui rapportent le plus</b>.",
         pressKey: "Appuyez sur n'importe quelle touche pour découvrir voir les nouvelles règles."
     },
-    rulesWillChange:{
+    rulesWillChange: {
         attention: "Attention, ces règles vont changer au milieu de l'expérience !",
         clear: "Cela vous sera indiqué clairement. Prêtez attention aux instructions.",
     },
@@ -961,7 +967,7 @@ const fr = {
         viewInstructions: "Vous allez revoir les instructions.",
         surveyAgain: "Puis vous allez de nouveau répondre aux questions.",
         press: "Appuyez sur <strong>Suivant</strong> pour continuer !",
-    },      
+    },
     loopAgainSpanMpl: {
         failed: "Une ou plusieurs réponses sont incorrectes ou n’ont pas été sélectionnées correctement.",
         yourRAreIncorrectPlural: "de vos réponses sont incorrectes",
@@ -1047,7 +1053,7 @@ const fr = {
                 "Non applicable",
                 "Préfère ne pas répondre"
             ],
-            collegeDegree :[
+            collegeDegree: [
                 "Oui",
                 "Non",
                 "Préfère ne pas répondre"
@@ -1080,13 +1086,13 @@ const fr = {
         easy: "<p><b>{fdb}</b><br>Votre réponse était {answer}, la réponse correcte était {fds_correct_ans}.</br></p>",
     },
     instructionsMPL: {
-            makeChoice: `Veuillez <span style="background-color: rgba(239, 243, 4, 1)">choisir</span> quel lot vous <b>vous préférez</b> (<span style="color: red">A</span> ou <span style="color: blue">B</span>) pour chaque ligne (chaque \"version\") du tableau ci-dessous. Vous pouvez ensuite cliquer sur 'Suivant'.`,
-            makeChoiceIncentives: `Veuillez <span style="background-color: rgba(239, 243, 4, 1)">choisir</span> le lot qui <b>rapporte le plus d'argent</b> (<span style="color: red">A</span> ou <span style="color: blue">B</span>) pour chaque ligne (chaque \"version\") du tableau ci-dessous. Vous pouvez ensuite cliquer sur 'Suivant'.`,
-            computerChooses: 'Si ce tour est choisi pour le paiement, l\'ordinateur choisira une ligne (\"version\") au hasard et utilisera votre <span style="background-color:  rgba(239, 243, 4, 1)">choix</span> (<span  style="color: red">lot A</span> ou <span style="color: blue"> lot B</span>) à cette ligne pour déterminer votre paiement.',
-            trainingTitle: "Entraînement à choisir les lots",
-            explanation1: "<b>Choisissez</b> le <span style=\"color: red\">lot A</span> pour les lignes (\"versions\") 1 à 6 et le <span style=\"color: blue\">lot B</span> pour les lignes (\"versions\") 7 à 18.",
-            explanation2: "<b>Choisissez</b> le <span style=\"color: blue\">lot B</span> pour les lignes (\"versions\") 1 à 8 et le <span style=\"color: red\">lot A</span> pour les lignes (\"versions\") 9 à 18.",
-            trainingClickNext: "Quand vous l'avez fait, cliquez sur <strong>Suivant</strong> pour continuer."
+        makeChoice: `Veuillez <span style="background-color: rgba(239, 243, 4, 1)">choisir</span> quel lot vous <b>vous préférez</b> (<span style="color: red">A</span> ou <span style="color: blue">B</span>) pour chaque ligne (chaque \"version\") du tableau ci-dessous. Vous pouvez ensuite cliquer sur 'Suivant'.`,
+        makeChoiceIncentives: `Veuillez <span style="background-color: rgba(239, 243, 4, 1)">choisir</span> le lot qui <b>rapporte le plus d'argent</b> (<span style="color: red">A</span> ou <span style="color: blue">B</span>) pour chaque ligne (chaque \"version\") du tableau ci-dessous. Vous pouvez ensuite cliquer sur 'Suivant'.`,
+        computerChooses: 'Si ce tour est choisi pour le paiement, l\'ordinateur choisira une ligne (\"version\") au hasard et utilisera votre <span style="background-color:  rgba(239, 243, 4, 1)">choix</span> (<span  style="color: red">lot A</span> ou <span style="color: blue"> lot B</span>) à cette ligne pour déterminer votre paiement.',
+        trainingTitle: "Entraînement à choisir les lots",
+        explanation1: "<b>Choisissez</b> le <span style=\"color: red\">lot A</span> pour les lignes (\"versions\") 1 à 6 et le <span style=\"color: blue\">lot B</span> pour les lignes (\"versions\") 7 à 18.",
+        explanation2: "<b>Choisissez</b> le <span style=\"color: blue\">lot B</span> pour les lignes (\"versions\") 1 à 8 et le <span style=\"color: red\">lot A</span> pour les lignes (\"versions\") 9 à 18.",
+        trainingClickNext: "Quand vous l'avez fait, cliquez sur <strong>Suivant</strong> pour continuer."
     },
     endowmentsMPL: {
         lottery: {
@@ -1117,7 +1123,7 @@ const fr = {
             A10: `Vous serez payé·e 15€ plus la somme divisée par 100 (la moyenne) de l'argent de toutes les boîtes du lot que vous avez choisi pour cette ligne.`,
             A15: `Vous serez payé·e 20€ plus la somme divisée par 100 (la moyenne) de l'argent de toutes les boîtes du lot que vous avez choisi pour cette ligne.`,
         },
-        mirrorNotIncentivized : {
+        mirrorNotIncentivized: {
             G90: `Un lot rapporte 5€ plus la somme divisée par 100 (la moyenne) de l'argent de toutes les boîtes qu'il contient.`,
             G75: `Un lot rapporte 5€ plus la somme divisée par 100 (la moyenne) de l'argent de toutes les boîtes qu'il contient.`,
             G50: `Un lot rapporte 5€ plus la somme divisée par 100 (la moyenne) de l'argent de toutes les boîtes qu'il contient.`,
@@ -1133,8 +1139,8 @@ const fr = {
         }
     },
     incentiveBadge: {
-     super: "💰 Super Tour 💰",
-     classic : "Tour Classique"
+        super: "💰 Super Tour 💰",
+        classic: "Tour Classique"
     },
     span_span: {
         first_letters_priority: "Vous allez voir {theBlueDigits}. Retenez-{the} en <b>priorité</b>, même pendant la présentation des chiffres <span style='color: red'>rouges</span>.",
@@ -1154,8 +1160,8 @@ const fr = {
     },
     fds: {
         trialOutOf: "Tour {current} sur {total}", //<span style='color: #D4AF37'>
-        incentivizedRound : `Le tour qui vient est un <b>💰 Super Tour 💰</b> ! Il peut être sélectionné pour le  <b>paiement</b> !`,
-        notIncentivizedRound : `Le tour qui vient est un <span style='color: #275293df'><b>Tour classique</b></span>. Il ne peut pas être sélectionné pour le paiement.`,
+        incentivizedRound: `Le tour qui vient est un <b>💰 Super Tour 💰</b> ! Il peut être sélectionné pour le  <b>paiement</b> !`,
+        notIncentivizedRound: `Le tour qui vient est un <span style='color: #275293df'><b>Tour classique</b></span>. Il ne peut pas être sélectionné pour le paiement.`,
     },
     response_grid_instructions: "<p>Tapez ci-dessous les chiffres dans l'ordre où vous les avez vus, puis appuyez sur Entrée.</p>",
     debrief_incentives_span_mpl: {
@@ -1176,27 +1182,27 @@ const fr = {
         currentAnswer: "Réponse actuelle",
         clear: "Effacer",
     },
-    slidersMotiv : {
+    slidersMotiv: {
         titleInstructions: "Instructions pour la Partie 4.",
-        severalBars :"Dans cette partie, vous verrez plusieurs barres avec un curseur pour chacune d'elles.",
-        objCenter:"Pour chaque barre, votre objectif est de placer le curseur le plus près possible du centre de la barre en le déplaçant avec la souris.",
+        severalBars: "Dans cette partie, vous verrez plusieurs barres avec un curseur pour chacune d'elles.",
+        objCenter: "Pour chaque barre, votre objectif est de placer le curseur le plus près possible du centre de la barre en le déplaçant avec la souris.",
         bonus: "Calcul du bonus pour la Partie 4 :",
-        randomBar : "A la fin de la partie, une barre sera tirée au hasard.",
-        maxBonus : "Si votre curseur pour cette barre est exactement au <b>centre</b>, vous gagnez <b>0,50€</b>.",
-        linear :"Plus votre curseur est éloigné du centre, moins vous gagnez (de façon linéaire avec la distance au centre).",
-        example :"Par exemple, si pour la barre choisie votre curseur est au milieu entre le centre et une extrémité, vous gagnez <b>0,25€</b>.",
-        train :"Ci-dessous, vous pouvez vous entraîner à déplacer les curseurs.",
+        randomBar: "A la fin de la partie, une barre sera tirée au hasard.",
+        maxBonus: "Si votre curseur pour cette barre est exactement au <b>centre</b>, vous gagnez <b>0,50€</b>.",
+        linear: "Plus votre curseur est éloigné du centre, moins vous gagnez (de façon linéaire avec la distance au centre).",
+        example: "Par exemple, si pour la barre choisie votre curseur est au milieu entre le centre et une extrémité, vous gagnez <b>0,25€</b>.",
+        train: "Ci-dessous, vous pouvez vous entraîner à déplacer les curseurs.",
         remember: "Rappel : quand vous appuirez sur <b>Suivant</b> (en bas de page), une barre sera sélectionnée au hasard pour votre bonus. Vous gagnerez <b>0,50€</b> si votre curseur pour cette barre est exactement au <b>centre</b>, et moins si votre curseur est plus éloigné du centre (<b>0€ aux extremités</b>).",
-        clickNextInstructions :"Cliquez sur <b>Suivant</b> pour commencer la Partie 4 !",
+        clickNextInstructions: "Cliquez sur <b>Suivant</b> pour commencer la Partie 4 !",
     },
-    arithInstr : {
+    arithInstr: {
         titleInstructions: "Instructions pour la Partie 4.",
-        severalAdditions :"Dans cette partie, votre but est d'effectuer correctement un <b>maximum d'additions</b> en 1 minute.",
-        nRounds : "Il y aura 4 tours de 1 minute.",
+        severalAdditions: "Dans cette partie, votre but est d'effectuer correctement un <b>maximum d'additions</b> en 1 minute.",
+        nRounds: "Il y aura 4 tours de 1 minute.",
         bonus: "Bonus pour la Partie 4 :",
-        randomRound : "Vous serez payé {paymentPerAddition}€ pour chaque addition correcte, pour un tour sélectionné au hasard.",
-        example :"Par exemple, si au tour choisi vous avez effectué 3 additions correctement, vous gagnerez 3 x {paymentPerAddition}€ = <b>{exemplePayment}€</b>.",
-        clickNextInstructions :"Cliquez sur <b>Suivant</b> pour commencer la Partie 4 !",
+        randomRound: "Vous serez payé {paymentPerAddition}€ pour chaque addition correcte, pour un tour sélectionné au hasard.",
+        example: "Par exemple, si au tour choisi vous avez effectué 3 additions correctement, vous gagnerez 3 x {paymentPerAddition}€ = <b>{exemplePayment}€</b>.",
+        clickNextInstructions: "Cliquez sur <b>Suivant</b> pour commencer la Partie 4 !",
     },
     choicesBefore: "Ce sont les choix que vous avez faits avant que la règle de paiement n'ait changé.",
     choicesAfter: "Ce sont les choix que vous avez faits après que la règle de paiement ait changé.",
@@ -1214,25 +1220,27 @@ const fr = {
         veryCertain: "100% (Je suis certain·e)",
     },
     sliderHonest: "Vos réponses aux questions suivantes sont anonymes et ne sont pas liées à votre paiement. Veuillez répondre honnêtement.",
-    sliderCognitiveUncertainty:{
+    sliderCognitiveUncertainty: {
         question: "Quelle est la probabilité selon vous (en %) que vos réponses aient maximisé vos bonus pour toutes les lignes de chaque tableau de la tâche des choix?",
         questionIncentives: "Quelle est la probabilité selon vous (en %) que vos réponses aient maximisé vos bonus pour toutes les lignes à chaque tour ?",
         veryUncertain: "0% (bonus non maximisé)",
         veryCertain: "100% (bonus maximisé)",
     },
-    sliderAttentionToIncentives:{
-        questionIncentivesClassic: "Avez-vous prêté attention aux <span style='color: #275293df'><b>Tours Classiques</b></span> ?",
-        questionIncentivesSuper: "Avez-vous prêté attention aux <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> ?",
-        veryUncertain: "0% (aucune attention)",
-        veryCertain: "100% (attention maximale)",
+    sliderAttentionToIncentives: {
+        questionIncentivesClassicIneq: "Avez-vous fait un effort pour choisir les lots qui rapportaient le plus dans les <span style='color: #275293df'><b>Tours Classiques</b></span> ?",
+        questionIncentivesClassicMirr: "Avez-vous fait un effort pour choisir les lots qui vous plaisaient le plus dans les <span style='color: #275293df'><b>Tours Classiques</b></span> ?",
+        questionIncentivesSuperIneq: "Avez-vous fait un effort pour choisir les lots qui rapportaient le plus dans les <span style='color: #D4AF37'><b>Super Tours</b></span> ?",
+        questionIncentivesSuperMirr: "Avez-vous fait un effort pour choisir les lots qui vous plaisaient le plus dans les <span style='color: #D4AF37'><b>Super Tours</b></span> ?",
+        veryUncertain: "0% (pas d'effort)",
+        veryCertain: "100% (effort maximal)",
     },
-    sliderCognitiveUncertainty:{
+    sliderCognitiveUncertainty: {
         question: "Quelle est la probabilité selon vous (en %) que vos réponses aient maximisé vos bonus pour toutes les lignes de chaque tableau de la tâche des choix?",
         questionIncentives: "Quelle est la probabilité selon vous (en %) que vos réponses aient maximisé vos bonus pour toutes les lignes à chaque tour ?",
         veryUncertain: "0% (bonus non maximisé)",
         veryCertain: "100% (bonus maximisé)",
     },
-    sliderInattention:{
+    sliderInattention: {
         questionBoxes: "Avez-vous prêté attention au nombre de boîtes dans chaque lot dans les tableaux de la tâche des choix?",
         questionPayoffs: "Avez-vous prêté attention aux montants des boîtes dans chaque lot dans les tableaux de la tâche des choix?",
         questionBoxesIncentives: "Avez-vous prêté attention au nombre de boîtes des lots ?",
@@ -1240,21 +1248,21 @@ const fr = {
         veryUncertain: "0% (aucune attention)",
         veryCertain: "100% (attention maximale)",
     },
-    sliderImprecision:{
+    sliderImprecision: {
         question: "Avez-vous plutôt deviné les réponses ou plutôt pris des décisions précises?",
         veryUncertain: "Je devinais",
         veryCertain: "Je prenais des décisions précises",
     },
     sliderArithmeticTest: {
         instructionTitle: "Instructions pour les dernières questions.",
-        title : "Questions",
+        title: "Questions",
         subtitle: "Vous allez répondre à cinq questions. Pour chaque question vous devez faire un calcul et écrire votre réponse.",
-        bonus : "Votre bonus est de <b>{bonusArithmetic}€</b> maximum.",
+        bonus: "Votre bonus est de <b>{bonusArithmetic}€</b> maximum.",
         bePrecise: "À la fin de l'expérience un des calculs sera sélectionné au hasard. Votre bonus dépendra de votre précision à ce calcul, soyez donc le plus précis possible !",
-        morePrecisely : "Cliquez sur ici si vous voulez plus de précisions sur le calcul du bonus pour cette partie.",
-        morePreciseDistance : "La distance à la bonne réponse est calculée comme suit (où la fonction valeur absolue est notée | |) :",
-        formula : "distance = |votre réponse - bonne réponse| / 25. ",
-        morePrecisionBonus : `Si la distance est comprise entre 0 et 1 inclus, votre bonus est ensuite calculé de la manière suivante : bonus = {bonusArithmetic}€ x (1 - distance).
+        morePrecisely: "Cliquez sur ici si vous voulez plus de précisions sur le calcul du bonus pour cette partie.",
+        morePreciseDistance: "La distance à la bonne réponse est calculée comme suit (où la fonction valeur absolue est notée | |) :",
+        formula: "distance = |votre réponse - bonne réponse| / 25. ",
+        morePrecisionBonus: `Si la distance est comprise entre 0 et 1 inclus, votre bonus est ensuite calculé de la manière suivante : bonus = {bonusArithmetic}€ x (1 - distance).
         Sinon votre bonus est de 0€.<br>
         Par exemple, si la bonne réponse est 20 et que votre réponse est 15, votre distance est de 0.2 et votre bonus de {bonusArithmetic}€ x (1 - 0.2) = {exampleBonusArithmetic}€.`,
         paymentSentenceFr: "Votre paiement pour les questions est de {y} €.",
@@ -1274,14 +1282,14 @@ const fr = {
         yourAnswer: "Votre réponse: ",
         correctAnswer: "La réponse correcte était: "
     },
-    arithmeticTrial:{
+    arithmeticTrial: {
         enterNumbers: "Tapez la somme des chiffres puis appuyez sur Entrée.",
     },
     arithmeticPresentationRound: {
-        round : "Tour {n}.",
-        incentivizedRound : `Attention ! Le tour qui vient est un "Super tour". Ce tour a <b>deux fois plus de chances</b> d'être sélectionné pour le paiement que les "Tours classiques"!`,
-        notIncentivizedRound : `Le tour qui vient est un "Tour Classique". Il a une chance normale d'être sélectionné pour le paiement.`,
-        pressEnter : "Appuyez sur Entrée pour commencer le tour."
+        round: "Tour {n}.",
+        incentivizedRound: `Attention ! Le tour qui vient est un "Super tour". Ce tour a <b>deux fois plus de chances</b> d'être sélectionné pour le paiement que les "Tours classiques"!`,
+        notIncentivizedRound: `Le tour qui vient est un "Tour Classique". Il a une chance normale d'être sélectionné pour le paiement.`,
+        pressEnter: "Appuyez sur Entrée pour commencer le tour."
     }
 
 };
