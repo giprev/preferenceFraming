@@ -2831,9 +2831,9 @@ const incentives_mplIncentives = {
 
         /******* mpl payment *********/
         let actual_payment_mplIncentives = 0;
-        const subBlockIntegerMplIncentives = getRandomInt(1, numberTrialsMPLIncentives + numberSuperIncentivizedMPLs) // round number + more incentivized rounds.
-        console.log("numberTrialsMPLIncentives + numberSuperIncentivizedMPLs is ", numberTrialsMPLIncentives + numberSuperIncentivizedMPLs);
-        console.log("subBlockIntegerMplIncentives is ", subBlockIntegerMplIncentives);
+        //const subBlockIntegerMplIncentives = getRandomInt(1, numberTrialsMPLIncentives + numberSuperIncentivizedMPLs) // round number + more incentivized rounds.
+        //console.log("numberTrialsMPLIncentives + numberSuperIncentivizedMPLs is ", numberTrialsMPLIncentives + numberSuperIncentivizedMPLs);
+        //console.log("subBlockIntegerMplIncentives is ", subBlockIntegerMplIncentives);
 
         let actual_payment_mpl = 0;
         let chosenStatus = "mirror" // always mirror in this experiment
@@ -2842,7 +2842,7 @@ const incentives_mplIncentives = {
 
             let selectedRow;
             let selectedTrial;
-            console.log("subBlockIntegerMplIncentives > numberTrialsMPLIncentives");
+            //console.log("subBlockIntegerMplIncentives > numberTrialsMPLIncentives");
             const superTrials = jsPsych.data.get().filterCustom(function (trial) {
                 return trial.task == 'mpl' &&
                     trial.block == 'mpl_incentives' &&
@@ -2891,7 +2891,7 @@ const incentives_mplIncentives = {
         if (arTestResponse !== null && !Number.isNaN(arTestResponse)) {
             arTestDistance = Math.abs(arTestResponse - arTestCorrectAmount);
             arTestNormalizedDistance = arTestDistance / 25; // normalize by the maximum possible distance
-            const rawArTestPayment = 0.5 * Math.pow(1 - arTestNormalizedDistance, 1);// linear funcyion of the distance
+            const rawArTestPayment = 0.5 * Math.pow(1 - arTestNormalizedDistance, 1);// linear function of the distance
             actual_payment_arithmeticTest = Math.round(Math.max(0, Math.min(rawArTestPayment, 0.5)) * 100) / 100;
         }
 
@@ -4310,7 +4310,7 @@ const prolific_redirect = {
 
 jsPsych.data.addProperties({ subject: subjectId });
 
-timeline.push( /* {type: "fullscreen", fullscreen_mode: true},*/ timelineUncertaintyIncentives, consentForm, demographics,/* instructionsBeforeCalibration, fds_calibration, calibrationDebrief,
+timeline.push( /* {type: "fullscreen", fullscreen_mode: true},*/ consentForm, demographics,/* instructionsBeforeCalibration, fds_calibration, calibrationDebrief,
     instructionsSpanSpan, fds_span_span_proc, spanSpanDebrief, fdsTrialNumReset, experiment_span_MPL, timelineUncertainty, timelineSlidersMotivation,
     timelineAnglesMotivation, arithmeticTimeline,  incentives_span_mpl, */ experiment_MPLIncentives, timelineUncertaintyIncentives, arithmeticTestTimeline, incentives_mplIncentives);
 
