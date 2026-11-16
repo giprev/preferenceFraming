@@ -55,7 +55,7 @@ if (Math.random() < 0.5) { treatmentGoal = "ineq"; } else { treatmentGoal = "mir
 let totalFdsTrainingTrials = 9; // number of rounds of the calibration
 
 let setup_MPLIncentives_trialDuration = 5000 // for MPLIncentives, duration of the page that announces the round and if the next MPL is highly incentivized or not
-let basePaymentMPLIncentives = 6;
+let basePaymentMPLIncentives = 9;
 const propSelecForMPLIncentives = 5; // 1 out of propSelecForMPLIncentives participants will be selected for the MPL payment in the incentives experiment
 
 const baseBonusArithmeticTest = 0.5; // 0.5€ if the arithmetic question (calculate an average) is answered correctly. Otherwise it is linearly decreasing with the distance between the answer and the correct result, with a minimum of 0 and a maximum of 0.5€.

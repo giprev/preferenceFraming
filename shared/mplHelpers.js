@@ -646,7 +646,7 @@ function generateShuffledArray() { // generate an array with numbers 1-12, with 
 }
 
 function generateIndexSuperMPLs(l) {
-    let moreIncentivized = Array(numberSuperIncentivizedMPLs).fill(1); // 4 more incentivized MPLs
+    let moreIncentivized = Array(numberSuperIncentivizedMPLs).fill(1); // 7 more incentivized MPLs
     let others = new Array(l - moreIncentivized.length).fill(0);
     let combined = moreIncentivized.concat(others);
 
@@ -1385,48 +1385,48 @@ const example5MPLSelected = `
             </tr>
             <tr>
             <td>4</td>
-            <td class="choice selected" data-row="4" data-choice="lottery" style="color: red">
+            <td class="choice" data-row="4" data-choice="lottery" style="color: red">
             10€
             <input type="radio" name="row4" value="lottery" checked>
             </td>
-            <td class="choice selected" data-row="4" style="color: red">0€</td>
-            <td class="choice" data-row="4" data-choice="sure" style="color: blue">
+            <td class="choice" data-row="4" style="color: red">0€</td>
+            <td class="choice selected" data-row="4" data-choice="sure" style="color: blue">
             4€
             <input type="radio" name="row4" value="sure">
             </td>
             </tr>
             <tr>
             <td>5</td>
-            <td class="choice selected" data-row="5" data-choice="lottery" style="color: red">
+            <td class="choice" data-row="5" data-choice="lottery" style="color: red">
             10€
             <input type="radio" name="row5" value="lottery" checked>
             </td>
-            <td class="choice selected" data-row="5" style="color: red">0€</td>
-            <td class="choice" data-row="5" data-choice="sure" style="color: blue">
+            <td class="choice" data-row="5" style="color: red">0€</td>
+            <td class="choice selected" data-row="5" data-choice="sure" style="color: blue">
             5€
             <input type="radio" name="row5" value="sure">
             </td>
             </tr>
             <tr>
             <td>6</td>
-            <td class="choice selected" data-row="6" data-choice="lottery" style="color: red">
+            <td class="choice" data-row="6" data-choice="lottery" style="color: red">
             10€
             <input type="radio" name="row6" value="lottery" checked>
             </td>
-            <td class="choice selected" data-row="6" style="color: red">0€</td>
-            <td class="choice" data-row="6" data-choice="sure" style="color: blue">
+            <td class="choice" data-row="6" style="color: red">0€</td>
+            <td class="choice selected" data-row="6" data-choice="sure" style="color: blue">
             6€
             <input type="radio" name="row6" value="sure">
             </td>
             </tr>
             <tr>
             <td>7</td>
-            <td class="choice selected" data-row="7" data-choice="lottery" style="color: red">
+            <td class="choice" data-row="7" data-choice="lottery" style="color: red">
             10€
             <input type="radio" name="row7" value="lottery" checked>
             </td>
-            <td class="choice selected" data-row="7" style="color: red">0€</td>
-            <td class="choice" data-row="7" data-choice="sure" style="color: blue">
+            <td class="choice" data-row="7" style="color: red">0€</td>
+            <td class="choice selected" data-row="7" data-choice="sure" style="color: blue">
             7€
             <input type="radio" name="row7" value="sure">
             </td>

@@ -785,8 +785,8 @@ const fr = {
         q3: {
             promptIncentives: `Dernière question : pour chaque choix, quelle est l'instruction qui vous a été donnée ?`,
             optionsMain: [
-                `Choisir l'option qui rapporte le plus.`,
-                `Choisir l'option que je préfère.`,
+                `Choisir le lot qui rapporte le plus.`,
+                `Choisir le lot que je préfère.`,
             ],
         },
     },
@@ -823,13 +823,13 @@ const fr = {
         comprehensionChecked: "Vous avez correctement répondu à la première partie des questions de compréhension.",
         comprehensionCheckedIncentives: "Vous avez correctement répondu aux questions de compréhension.",
         description: `Dans la Partie 3, vous devrez choisir entre différentes lignes ("versions") du <span style='color:red'>lot A</span> et du <span style='color:blue'>lot B</span>.`,
-        descriptionIncentives: `Durant l'expérience, vous allez choisir entre différentes lignes ("versions") du <span style='color:red'>lot A</span> et du <span style='color:blue'>lot B</span>.`,
+        descriptionIncentives: `Durant l'expérience, les lots sont présentés dans des tableaux. Chaque tableau comporte plusieurs lignes.`,
         example1: ` 
         Dans l'exemple ci-dessous, le <span style='color:red'>lot A</span> est le même pour toutes les lignes ("versions") du tableau. Cependant le <span style='color:blue'>lot B</span> change : à chaque version, l'argent dans chacune de ses boîtes augmente de 1€.`,
         chooseSet: `Vous devez choisir le lot qui vous <b>plaît</b> le plus à chaque ligne. Le lot sélectionné à chaque ligne est surligné en <span style='background-color: rgba(239, 243, 4, 1)'>jaune</span>.
-        Dans l'exemple ci-dessous, vous sélectionnez le <span style='color:red'>lot A</span> dans les lignes ("versions") 1, 2, 3, 4, 5, 6 et 7, et vous sélectionnez le <span style='color:blue'>lot B</span> dans les lignes ("versions") 8, 9 et 10.`,
-        chooseSetInequalities: `Vous devez choisir le lot qui <b>rapporte</b> le plus à chaque ligne. Le lot sélectionné à chaque ligne est surligné en <span style='background-color: rgba(239, 243, 4, 1)'>jaune</span>.
-        Dans l'exemple ci-dessous, vous sélectionnez le <span style='color:red'>lot A</span> dans les lignes ("versions") 1, 2, 3, 4, 5, 6 et 7, et vous sélectionnez le <span style='color:blue'>lot B</span> dans les lignes ("versions") 8, 9 et 10.`,
+        Dans l'exemple ci-dessous, vous sélectionnez le <span style='color:red'>lot A</span> dans les lignes ("versions") 1, 2, 3 et vous sélectionnez le <span style='color:blue'>lot B</span> dans les lignes ("versions") 4, 5, 6, 7, 8, 9 et 10.`,
+        chooseSetInequalities: `Vous devez choisir le lot qui <b>rapporte</b> le plus, à chaque ligne. Le lot sélectionné à chaque ligne est surligné en <span style='background-color: rgba(239, 243, 4, 1)'>jaune</span>.
+        Dans l'exemple ci-dessous, vous sélectionnez le <span style='color:red'>lot A</span> dans les lignes ("versions") 1, 2, 3 et vous sélectionnez le <span style='color:blue'>lot B</span> dans les lignes ("versions") 4, 5, 6, 7, 8, 9 et 10.`,
         pickOneRow: `À la fin de l'expérience, si vous êtes sélectionné·e (vous avez en moyenne une chance sur 22), l'ordinateur sélectionnera au hasard une ligne du tableau
         (une lignes("version") des <span style='color:red'>lot A</span> et <span style='color:blue'>lot B</span>) et vous serez payé·e en fonction du lot que vous aurez sélectionné pour cette ligne. Chaque ligne a la même chance d'être sélectionnée.
         Vous devez donc choisir chaque ligne comme si c'était celle qui allait être payée.`,
@@ -859,12 +859,12 @@ const fr = {
         incentivesMPL1: `Vous avez en moyenne une chance sur {propSelecForMPL} d'être sélectionné·e au hasard pour avoir ce bonus. Si c'est le cas l'ordinateur sélectionnera <b>au hasard un tour puis une ligne (version) du tableau que vous avez vu ce tour-là</b>, 
         puis déterminera votre paiement <b>selon votre choix pour cette ligne</b>.`,
         incentivesMPL1Incentives: `À chaque tour, vous commencez avec une somme d'argent, indiquée en <span style='color:green'>vert</span> en haut de chaque tableau. Elle varie entre les tours.  
-        Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un des ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
-        Si c'est le cas l'ordinateur sélectionne au hasard une ligne (version) du tableau que vous avez vu à ce tour là, et <b>vous paye ce que rapporte le lot que vous avez choisi à cette ligne plus la somme d'argent en "<span style='color:green'>vert</span>"</b>.`,
-        // incentivesMPL1Incentives: `Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un des ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
+        Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un de ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
+        Si c'est le cas l'ordinateur sélectionne au hasard une ligne (version) du tableau que vous avez vu à ce tour là, et <b>vous paye ce que rapporte le lot que vous avez choisi à cette ligne plus la somme d'argent en <span style='color:green'>vert</span></b>.`,
+        // incentivesMPL1Incentives: `Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un de ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
         // Si c'est le cas l'ordinateur sélectionnera <b>au hasard un <span style='color: #D4AF37'>💰 Super Tour 💰</span> puis une ligne (version) du tableau que vous avez vu à ce tour là</b>, 
         // puis vous payera ce que rapporte le lot que vous avez choisi à cette ligne.`,
-        // incentivesMPL1Incentives: `Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un des ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
+        // incentivesMPL1Incentives: `Certains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> : vous avez en moyenne une chance sur {propSelecForMPLIncentives} pour qu’un de ces <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> soit payé. 
         // Si c'est le cas l'ordinateur sélectionnera <b>au hasard un <span style='color: #D4AF37'>💰 Super Tour 💰</span> puis une ligne (version) du tableau que vous avez vu à ce tour là</b>, 
         // puis vous payera ce que rapporte le lot que vous avez choisi à cette ligne.`,
         roundIncentivized: `Les autres tours (<span style='color: #275293df'><b>Tours Classiques</b></span>) ne sont <b>pas payés</b>. Avant chaque tour vous serez prévenu·e s’il s’agit d’un <span style='color: #D4AF37'><b>💰 Super tour 💰</b></span> ou d’un <span style='color: #275293df'><b>Tour Classique</b></span>.`,
@@ -875,7 +875,7 @@ const fr = {
         timeLimit: "Vous aurez {mplTimeLimit} secondes pour faire vos choix à chaque tableau (même sans cliquer sur le bouton Suivant ils seront pris en compte). Cependant si vous êtes sélectionné·e mais qu'au tour choisi au hasard vous n'avez pas fait de choix dans le temps imparti, vous n'obtiendrez pas de bonus.",
         incentivesMPL3: `Faites donc chaque choix comme si c'était celui qui allait être payé !`,
         priority: "Retenez les chiffres même pendant la tâche des choix, le bonus du jeu des chiffres est en moyenne supérieur à celui de la tâche des choix !",
-        clickNext: "Cliquez sur <strong>Suivant</strong> pour effectuer un exemple final d'un <b>💰 Super Tours 💰</b>."
+        clickNext: "Cliquez sur <strong>Suivant</strong> pour effectuer un exemple final d'un <span style='color: #D4AF37'><b>💰 Super Tour 💰</b></span>."
 
     },
     instructionsMPLIncentives: {
@@ -912,7 +912,7 @@ const fr = {
         paymentMPL: "Pour la <b>tâche des choix</b>, la ligne (version) du tableau sélectionnée au hasard est la ligne {selectedRow}. Pour cette ligne vous avez choisi le {chosenLot}. Après calcul, le paiement pour la tâche des choix s’élèverait à <b>{paymentMPL}€</b>: <span style='color:green'>5€ (la somme initiale)</span> plus le montant déterminé selon votre choix et la règle de paiement à la ligne {selectedRow}.",
         youSelected: "La ligne (version) du tableau sélectionnée au hasard est la ligne {selectedRow}. Pour cette ligne vous avez choisi le {chosenLot}. ",
         rightChoiceWas: "Il <b>fallait choisir le {rightLot}</b> car il rapportait plus d'argent à cette ligne. ",
-        yourPayment: "Votre paiement serait donc de <b>{paymentMPL}€</b> : {paymentChoice}€ (ce que rapporte le lot que vous avez choisi à la ligne {selectedRow}) + <span style='color:green'>{endowment}€</span> (la somme initiale).",
+        yourPayment: "Votre paiement serait de <b>{paymentMPL}€</b> : {paymentChoice}€ (ce que rapporte le lot que vous avez choisi à la ligne {selectedRow}) + <span style='color:green'>{endowment}€</span> (la somme initiale).",
         remind: "À retenir: <b>en moyenne seulement une personne sur {propSelecForMPL}</b> est sélectionnée pour qu'un de ses choix à la tâche des choix soit payé. Au contraire vous êtes <b>sûr·e d'être sélectionné·e</b> pour le bonus du jeu des chiffres ! Correctement <b>restituer les chiffres est donc le plus important</b> pour maximiser votre gain total.",
         instructionReminder: 'Vous aurez la possibilité d\'afficher de nouveau les instructions pendant la troisième partie, en cliquant sur le bouton "Afficher les instructions".',
         clickNext: "Quand vous êtes prêt·e, cliquez sur <strong>Suivant</strong> pour commencer la tâche des choix."
@@ -1169,7 +1169,7 @@ const fr = {
         thanks: "Merci d'avoir participé à cette expérience !",
         calibrationPayment: "Votre bonus pour la première partie de l'expérience est de {trainingBonus}€.",
         spanSpanPayment_hard: "Votre bonus pour la deuxième partie de l'expérience est de {spanSpanBonus}€.",
-        selectedForMPL: "Vous avez été sélectionné·e pour qu'un de vos choix à la tâche de prise des choix soit payé.",
+        selectedForMPL: "Vous avez été sélectionné·e pour qu'un de vos choix à la tâche des choix soit payé.",
         notSelectedForMPL: "Vous n'avez pas été sélectionné·e pour qu'un de vos choix à la tâche des choix soit payé.",
         bonusSpanMPL: "Votre bonus pour la troisième partie de l'expérience est de {spanMplBonus}€. La décomposition est de {spanMPL}€ pour le jeu des chiffres et de {mplBonus}€ pour le choix de la tâche des choix.",
         bonusSpanWithoutMPL: "Votre bonus pour la troisième partie de l'expérience est de {spanMplBonus}€.",

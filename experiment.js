@@ -108,6 +108,7 @@ console.log("superArray_mirr is ", superArray_mirr)
 const luckyPpIncentives = getRandomInt(1, propSelecForMPLIncentives); // determine if the participant is selected to be paid a random draw of an MPL
 console.log("luckyPpIncentives is ", luckyPpIncentives)
 let treatHasChanged = false; // to indicate whether the treatment has changed (from mirror to inequalities or the inverse). It is used to shorten the instructions of the MPLs when participants see them a second time.
+
 /*************** INSTRUCTIONS ***************/
 
 const consentForm = {
@@ -1144,7 +1145,7 @@ const instructionsIncentivesSpanMPL = {
         <br>
         <p>${language.instructionsSpanInMPL.severalTablesDescription.replace("{bonusMPL}", bonusSpan)}</p>
         <p>${language.instructionsSpanInMPL.incentivesMPL1.replace("{propSelecForMPL}", propSelecForMPL)}</p>
-        <p>${language.instructionsSpanInMPL.incentivesMPL2}</p>
+        <!-- <p>${language.instructionsSpanInMPL.incentivesMPL2}</p> -->
         <!--<p>${language.instructionsSpanInMPL.incentivesMPL3}</p>-->
         <!-- <p>${language.instructionsSpanInMPL.priority}</p> -->
         <p>${language.instructionsSpanInMPL.clickNext}</p> `
@@ -1166,7 +1167,7 @@ const instructionsIncentivesSpanMPLIncentives = {
             <p>${language.instructionsSpanInMPL.MPLInSpanIncentives}</p>
             <p>${language.instructionsSpanInMPL.incentivesMPL1Incentives.replace("{propSelecForMPLIncentives}", propSelecForMPLIncentives)}</p>
             <p>${language.instructionsSpanInMPL.roundIncentivized}</p>
-            <p>${language.instructionsSpanInMPL.incentivesMPL2}</p>
+            <!-- <p>${language.instructionsSpanInMPL.incentivesMPL2}</p> -->
             <p>${language.instructionsSpanInMPL.CU_ineq}</p>
             <!-- <p>${language.instructionsSpanInMPL.instructionsMoreIncentivizedRound}</p> -->
             <!--<p>${language.instructionsSpanInMPL.incentivesMPL3}</p>-->
@@ -1182,7 +1183,7 @@ const instructionsIncentivesSpanMPLIncentives = {
             <p>${language.instructionsSpanInMPL.MPLInSpanIncentives}</p>
             <p>${language.instructionsSpanInMPL.incentivesMPL1Incentives.replace("{propSelecForMPLIncentives}", propSelecForMPLIncentives)}</p>
             <p>${language.instructionsSpanInMPL.roundIncentivized}</p>
-            <p>${language.instructionsSpanInMPL.incentivesMPL2}</p>
+            <!-- <p>${language.instructionsSpanInMPL.incentivesMPL2}</p> -->
             <p>${language.instructionsSpanInMPL.CU_mirr}</p>
             <!-- <p>${language.instructionsSpanInMPL.instructionsMoreIncentivizedRound}</p> -->
             <!--<p>${language.instructionsSpanInMPL.incentivesMPL3}</p>-->
@@ -2870,7 +2871,7 @@ const incentives_mplIncentives = {
             let choices = selectedTrial.select('choices').values[0];
             console.log(choices, "is the choices for the selected trial");
             actual_payment_mplIncentives = Math.round(calculateMPLPayment(mplType, selectedRow, choices, chosenStatus) * 100) / 100;
-            actual_payment_mplIncentives = Math.min(actual_payment_mplIncentives, 32.5); // maximum payment for the MPL part (A15 mirror)
+            actual_payment_mplIncentives = Math.min(actual_payment_mplIncentives, 37.5); // maximum payment for the MPL part (A15 mirror)
             console.log("actual_payment_mplIncentives is", actual_payment_mplIncentives)
             console.log("selectedRow is ", selectedRow, "and actual_payment_mplIncentives is", actual_payment_mplIncentives, "and luckyPp is ", luckyPp, "and chosenStatus is ", chosenStatus,
                 "and choices are ", choices);
@@ -2914,8 +2915,8 @@ const incentives_mplIncentives = {
         const cMpl = actual_payment_mplIncentives ?? 0;
         const cArTest = actual_payment_arithmeticTest ?? 0;
 
-        trial.data.totalBonus = Math.round((Math.min(cMpl, 32.50) + cArTest) * 100) / 100;
-        trial.data.totalPayment = Math.round((basePaymentMPLIncentives + trial.data.totalBonus) * 100) / 100; //30.5€
+        trial.data.totalBonus = Math.round((Math.min(cMpl, 37.50) + cArTest) * 100) / 100;
+        trial.data.totalPayment = Math.round((basePaymentMPLIncentives + trial.data.totalBonus) * 100) / 100;
         trial.data.propSelecForMPLIncentives = propSelecForMPLIncentives;
         trial.data.fds_post_trial_gap = fds_post_trial_gap;
         // trial.data.mplTimeLimit = mplTimeLimit;

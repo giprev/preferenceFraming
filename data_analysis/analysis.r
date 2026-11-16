@@ -1,9 +1,9 @@
 rm(list = ls())
 
 setwd("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis")
-PATH_TO_DATA <- "/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis/data/"
-PATH_TO_DATA <- "/Users/domitilleprevost/Downloads/"
-dir.create(file.path(PATH_TO_DATA, "figures_test_16102026"), showWarnings = FALSE, recursive = TRUE)
+PATH_TO_DATA <- "/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis/data"
+
+dir.create(file.path(PATH_TO_DATA, "figures_test_14112026"), showWarnings = FALSE, recursive = TRUE)
 getwd()
 
 library(jsonlite)
@@ -11,16 +11,19 @@ library(dplyr)
 library(readr)
 
 
-RAW_FILE <- file.path(PATH_TO_DATA, "test_16-10-2026.txt")
-RAW_FILE <- file.path(PATH_TO_DATA, "jatos_results_data_20261027100839.txt") # one file generated via the online experiment with one subject (me)
-CSV_FILE <- file.path(PATH_TO_DATA, "test_16-10-2026.csv")
+RAW_FILE <- file.path(PATH_TO_DATA, "test_14-11-2026.txt")
+CSV_FILE <- file.path(PATH_TO_DATA, "test_14-11-2026.csv")
 
-raw_lines <- readLines(RAW_FILE, warn = FALSE)
-if (any(!nzchar(trimws(raw_lines)))) {
+raw_lines <- readLines(RAW_FILE, warn = FALSE) # produce a character vector of lines from the raw data file, each line is a JSON string representing a participant record
+if (any(!nzchar(trimws(raw_lines)))) { # nzchar check if the string is not empty, trimws removes leading and trailing whitespace. If any line is empty, it will return TRUE
     stop("The raw data file contains an empty participant record.")
 }
 
 participant_records <- lapply(seq_along(raw_lines), function(participant_record) {
+    # seq_along generates a sequence of integers from 1 to the length of raw_lines.
+    # lapply applies the function to each element of the sequence, which is the index of the participant record in raw_lines.
+    # The function attempts to parse the JSON string for each participant record and returns a list of parsed records.
+    # If parsing fails, it stops execution and provides an error message with the participant record index and the error message.
     tryCatch(
         fromJSON(raw_lines[[participant_record]], simplifyVector = FALSE),
         error = function(error) {
@@ -30,6 +33,9 @@ participant_records <- lapply(seq_along(raw_lines), function(participant_record)
 })
 
 json_cell <- function(value) {
+    # function to convert a value to a character string for CSV output.
+    # If the value is NULL, it returns NA_character_. If the value is atomic and of length 1, it converts it to a character string.
+    # Otherwise, it converts the value to JSON format using toJSON() with auto_unbox = TRUE and null = "null", and then converts it to a character string.
     if (is.null(value)) {
         return(NA_character_)
     }
@@ -42,11 +48,16 @@ json_cell <- function(value) {
 }
 
 trial_rows <- unlist(
+    # it is the same as participant_records but make each trial a data_frame not a list, and adds participant_record = the number of the participant
+    # unlist flattens the list of lists (1 per subject) into a single list of trial records (subject's id in each trial record).
+    # first lapply applies the same function to each participant record line
+    # second lapply creates a data frame for each trial record
+    # vapply : applies json_cell to each trial record, and making each value a column in the data frame (character) of the trial
     lapply(seq_along(participant_records), function(participant_record) {
         lapply(participant_records[[participant_record]], function(trial) {
-            trial$participant_record <- participant_record
+            trial$participant_record <- participant_record # adds participant record index to each trial record. I.e. subject number 2 has participant_record = 2
             as.data.frame(
-                as.list(vapply(trial, json_cell, character(1))),
+                as.list(vapply(trial, json_cell, character(1))), # character(1) : output should ne of the same type as character(1)= character vector
                 stringsAsFactors = FALSE,
                 check.names = FALSE
             )
@@ -55,11 +66,11 @@ trial_rows <- unlist(
     recursive = FALSE
 )
 
-trial_data <- bind_rows(trial_rows)
+trial_data <- bind_rows(trial_rows) # makes one data frame from the list of data frames (one per trial record). bind_rows is a function from dplyr that combines data frames by rows, filling in missing columns with NA.
 write_csv(trial_data, CSV_FILE, na = "")
 
 round_trip_data <- read_csv(CSV_FILE, show_col_types = FALSE)
-if (nrow(round_trip_data) != nrow(trial_data)) {
+if (nrow(round_trip_data) != nrow(trial_data)) { # round_trip_data is the data frame read from the CSV file, and trial_data is the original data frame.
     stop("CSV validation failed: the row count changed after writing.")
 }
 
@@ -75,10 +86,6 @@ excluded_columns <- c(
 analysis_data <- round_trip_data %>%
     select(-any_of(excluded_columns))
 
-if (nrow(analysis_data) != nrow(round_trip_data)) {
-    stop("Analysis dataframe validation failed: the row count changed after column selection.")
-}
-
 if (n_distinct(analysis_data$subject) != n_distinct(round_trip_data$subject)) {
     stop("Analysis dataframe validation failed: the participant count changed.")
 }
@@ -86,6 +93,16 @@ if (n_distinct(analysis_data$subject) != n_distinct(round_trip_data$subject)) {
 if (any(excluded_columns %in% names(analysis_data))) {
     stop("Analysis dataframe validation failed: an excluded column is still present.")
 }
+
+
+
+
+
+
+
+
+# Second part of the file : analysis of the data and plotting
+
 
 calculate_mpl_equivalents <- function(
     mpl_type,
@@ -99,7 +116,7 @@ calculate_mpl_equivalents <- function(
         return(result)
     }
 
-    mpl_family <- substr(mpl_type, 1L, 1L) # extract a substring from a charaecter string. 1L starting, 2nd one : ending position
+    mpl_family <- substr(mpl_type, 1L, 1L) # extract a substring from a character string. 1L starting, 2nd one : ending position
     probability <- as.numeric(sub("^[GLA]O", "", mpl_type)) # removes the prefix G or L or A followed by O. Works only for lotteries named AO, GO or LO then the probability
     row1 <- suppressWarnings(as.numeric(switch_row1))
     row2 <- suppressWarnings(as.numeric(switch_row2))
@@ -113,8 +130,8 @@ calculate_mpl_equivalents <- function(
     result$switch <- as.integer(row1 >= 0 && row2 >= 0)
 
     # These are the choice orders that contradict the monotonic MPL values.
-    inverted_order <- (mpl_family == "G" && choice1 == "sure" && choice2 == "lottery") ||
-        (mpl_family %in% c("L", "A") && choice1 == "lottery" && choice2 == "sure")
+    inverted_order <- (mpl_family %in% c("G", "L") && choice1 == "sure" && choice2 == "lottery") ||
+        (mpl_family == "A" && choice1 == "lottery" && choice2 == "sure")
     if (inverted_order) {
         result$switchInversion <- 1L
         return(result)
@@ -157,7 +174,7 @@ calculate_mpl_equivalents <- function(
     result
 }
 
-analysis_data <- analysis_data %>%
+analysis_data <- analysis_data %>% # adds the columns that will be filled by calculate_mpl_equivalents
     mutate(
         CE = NA_real_,
         LE = NA_real_,
@@ -186,11 +203,17 @@ if (nrow(mpl_equivalents) != length(mpl_rows)) {
 
 analysis_data$CE[mpl_rows] <- mpl_equivalents$CE
 analysis_data$LE[mpl_rows] <- mpl_equivalents$LE
+analysis_data$switchInversion[mpl_rows] <- mpl_equivalents$switchInversion
 analysis_data$switch[mpl_rows
 ] <- mpl_equivalents$switch
-analysis_data$switchInversion[mpl_rows] <- mpl_equivalents$switchInversion
 
-prepare_mpl_plot_data <- function(data) {
+
+
+# Preparation of the MPL data per group (two stages : mean per participant, then averaged per group)
+
+
+
+summarize_mpl_by_group <- function(data, aggregationType) {
     required_columns <- c(
         "task", "block", "mplType", "treatIs", "isSuper", "CE", "LE"
     )
@@ -240,42 +263,92 @@ prepare_mpl_plot_data <- function(data) {
             deviation_from_expected_value = value - expected_value
         )
 
-    plot_summary <- plot_observations %>%
-        group_by(
-            mpl_family,
-            probability,
-            # value_type, not useful because CE and LE depend on mpl_family in any case
-            treatment,
-            incentive
-        ) %>%
-        summarise(
-            n = n(),
-            mean_value = mean(value),
-            sd_value = if (n() > 1L) sd(value) else NA_real_,
-            se_value = if (n() > 1L) sd(value) / sqrt(n()) else NA_real_,
-            mean_deviation = mean(deviation_from_expected_value), # should be equal to mean_value - pred.
-            sd_value_deviation = if (n() > 1L) sd(deviation_from_expected_value) else NA_real_, # i put them here to check if they are equal to the previous ones, they should be equal to sd_value
-            se_value_deviation = if (n() > 1L) sd(deviation_from_expected_value) / sqrt(n()) else NA_real_,
-            .groups = "drop"
-        )
-
+    if (aggregationType == "treatment") {
+        plot_summary <- plot_observations %>%
+            group_by(
+                mpl_family,
+                probability,
+                treatment,
+                subject
+            ) %>%
+            summarise(
+                n = n(),
+                mean_value_per_subject = mean(value),
+                mean_deviation_per_subject = mean(deviation_from_expected_value), # should be equal to mean_value - pred.
+                .groups = "drop"
+            ) %>%
+            group_by(
+                mpl_family,
+                probability,
+                treatment
+            ) %>%
+            summarise(
+                n = n(),
+                mean_value = mean(mean_value_per_subject),
+                sd_value = if (n() > 1L) sd(mean_value_per_subject) else (NA_real_),
+                se_value = if (n() > 1L) sd(mean_value_per_subject) / sqrt(n()) else NA_real_,
+                mean_deviation = mean(mean_deviation_per_subject), # should be equal to mean_value - pred.
+                sd_value_deviation = if (n() > 1L) sd(mean_deviation_per_subject) else (NA_real_), # i put them here to check if they are equal to the previous ones, they should be equal to sd_value
+                se_value_deviation = if (n() > 1L) sd(mean_deviation_per_subject) / sqrt(n()) else NA_real_,
+                .groups = "drop"
+            )
+    } else if (aggregationType == "incentive") {
+        plot_summary <- plot_observations %>%
+            group_by(
+                mpl_family,
+                probability,
+                incentive,
+                subject
+            ) %>%
+            summarise(
+                n = n(),
+                mean_value_per_subject = mean(value),
+                mean_deviation_per_subject = mean(deviation_from_expected_value), # should be equal to mean_value - pred.
+                .groups = "drop"
+            ) %>%
+            group_by(
+                mpl_family,
+                probability,
+                incentive
+            ) %>%
+            summarise(
+                n = n(),
+                mean_value = mean(mean_value_per_subject),
+                sd_value = if (n() > 1L) sd(mean_value_per_subject) else (NA_real_),
+                se_value = if (n() > 1L) sd(mean_value_per_subject) / sqrt(n()) else NA_real_,
+                mean_deviation = mean(mean_deviation_per_subject), # should be equal to mean_value - pred.
+                sd_value_deviation = if (n() > 1L) sd(mean_deviation_per_subject) else (NA_real_), # i put them here to check if they are equal to the previous ones, they should be equal to sd_value
+                se_value_deviation = if (n() > 1L) sd(mean_deviation_per_subject) / sqrt(n()) else NA_real_,
+                .groups = "drop"
+            )
+    }
     if (nrow(plot_observations) == 0L || nrow(plot_summary) == 0L) {
         stop("Plot-data preparation failed: no valid MPL observations were found.")
     }
-
-    if (anyDuplicated(plot_summary[c(
-        "mpl_family", "probability", "treatment", "incentive" # , "value_type"
-    )])) {
-        stop("Plot-data preparation failed: summary groups are duplicated.")
+    if (aggregationType == "treatment") {
+        if (anyDuplicated(plot_summary[c(
+            "mpl_family", "probability", "treatment" # , "value_type"
+        )])) {
+            stop("Plot-data preparation failed: summary groups are duplicated.")
+        }
+    } else if (aggregationType == "incentive") {
+        if (anyDuplicated(plot_summary[c(
+            "mpl_family", "probability", "incentive" # , "value_type"
+        )])) {
+            stop("Plot-data preparation failed: summary groups are duplicated.")
+        }
     }
 
     plot_summary
 }
 
-mpl_plot_data <- prepare_mpl_plot_data(analysis_data)
+mpl_group_summary_treatment <- summarize_mpl_by_group(analysis_data, aggregationType = "treatment")
+mpl_group_summary_incentive <- summarize_mpl_by_group(analysis_data, aggregationType = "incentive")
 
 
-mainPlot <- function(F, lab = "TEST TITRE", ylim = c(-20, 20)) {
+
+mainPlot <- function(F, aggregationType, lab = "TEST TITRE", ylim = c(-20, 20)) {
+    # we use all parameters of inequalities when aggregationType = "treatment" for classic mpls when aggregationType = "incentive"
     cex <- 1.7
     pt.cex <- 0.8
     offset <- 1
@@ -290,11 +363,19 @@ mainPlot <- function(F, lab = "TEST TITRE", ylim = c(-20, 20)) {
     mtext("Risk/Loss Seeking", at = 7, side = 4, srt = 180)
     mtext("Risk/Loss Averse", at = -7, side = 4, srt = 180)
 
-    legend("top",
-        legend = c("Inequalities (no preferences)", "Mirror (Simplicity Equivalents)"),
-        col = c("black", "black"), pt.bg = c(colors$inequalities, colors$mirror), pch = c(21, 21),
-        lty = c(1, 1), cex = 0.9, pt.cex = 1.5, bg = NA, box.lwd = NA
-    )
+    if (aggregationType == "treatment") {
+        legend("top",
+            legend = c("Inequalities (no preferences)", "Mirror (Simplicity Equivalents)"),
+            col = c("black", "black"), pt.bg = c(colors$inequalities, colors$mirror), pch = c(21, 21),
+            lty = c(1, 1), cex = 0.9, pt.cex = 1.5, bg = NA, box.lwd = NA
+        )
+    } else if (aggregationType == "incentive") {
+        legend("top",
+            legend = c("not paid", "paid"),
+            col = c("black", "black"), pt.bg = c(colors$inequalities, colors$mirror), pch = c(21, 21),
+            lty = c(1, 1), cex = 0.9, pt.cex = 1.5, bg = NA, box.lwd = NA
+        )
+    }
     # original legend
     # legend("top",legend=c("Lottery (Certainty Equivalents)",'Mirror (Simplicity Equivalents)'),col=c('black','black'),pt.bg=c('gray','white'),pch=c(21,21),lty=c(1,1),cex=0.9,pt.cex=1.5,bg=NA,box.lwd=NA)
 
@@ -316,8 +397,12 @@ mainPlot <- function(F, lab = "TEST TITRE", ylim = c(-20, 20)) {
             cat("No data available for plotting points.\n")
             return()
         }
-        # Inequalities points
-        inequalities <- data[data$treatment == "inequalities", ]
+        # Inequalities/classic points
+        if (aggregationType == "treatment") {
+            inequalities <- data[data$treatment == "inequalities", ]
+        } else if (aggregationType == "incentive") {
+            inequalities <- data[data$incentive == "classic", ]
+        }
         if (nrow(inequalities) > 0) {
             y_val <- if (pch_type == 25) inequalities$mean_value else inequalities$mean_deviation
             x_val <- if (pch_type == 25) rep(50, nrow(inequalities)) else inequalities$probability - 0.5
@@ -338,7 +423,11 @@ mainPlot <- function(F, lab = "TEST TITRE", ylim = c(-20, 20)) {
         }
 
         # Mirror points
-        mirror <- data[data$treatment == "mirror", ]
+        if (aggregationType == "treatment") {
+            mirror <- data[data$treatment == "mirror", ]
+        } else if (aggregationType == "incentive") {
+            mirror <- data[data$incentive == "super", ]
+        }
         if (nrow(mirror) > 0) {
             y_val <- if (pch_type == 25) mirror$mean_value else mirror$mean_deviation
             x_val <- if (pch_type == 25) rep(50, nrow(mirror)) else mirror$probability + 0.5
@@ -389,169 +478,23 @@ mainPlot <- function(F, lab = "TEST TITRE", ylim = c(-20, 20)) {
     plot_points(x, inequalities_color = colors$inequalities, mirror_color = colors$mirror, pch_type = 25, show_labels = TRUE)
 }
 
-mainPlot(mpl_plot_data, lab = "MPL deviations by treatment", ylim = c(-20, 20))
+mainPlot(mpl_group_summary_treatment, aggregationType = "treatment", lab = "MPL deviations by treatment test", ylim = c(-20, 20))
+mainPlot(mpl_group_summary_incentive, aggregationType = "incentive", lab = "MPL deviations by incentive test", ylim = c(-20, 20))
 
-# main_plot <- function(
-#     plot_data = mpl_plot_data,
-#     # treatment refers to the framing of the task, incentive refers to the presence of a super-incentive. Experimentally speaking, both are within-subject independent treatments
-#     grouping = c("treatment", "incentive"),
-#     lab = "",
-#     ylim = NULL,
-#     error_multiplier = 2) {
-#     grouping <- match.arg(grouping)
-#     required_columns <- c(
-#         "mpl_family", "probability", "treatment", "incentive",
-#         "n", "mean_value", "sd_value", "se_value", "mean_deviation"
-#     )
-#     missing_columns <- setdiff(required_columns, names(plot_data))
-#     if (length(missing_columns) > 0L) {
-#         stop(sprintf(
-#             "Plotting failed: missing columns: %s",
-#             paste(missing_columns, collapse = ", ")
-#         ))
-#     }
 
-#     if (grouping == "incentive") {
-#         plot_data <- plot_data %>% filter(!is.na(incentive))
-#     }
-#     if (nrow(plot_data) == 0L) {
-#         stop(sprintf("Plotting failed: no rows available for grouping '%s'.", grouping))
-#     }
 
-#     pooled_data <- plot_data %>%
-#         group_by(mpl_family, probability, .data[[grouping]]) %>%
-#         group_modify(~ {
-#             weights <- .x$n
-#             total_n <- sum(weights)
-#             pooled_mean <- weighted.mean(.x$mean_value, weights)
-#             pooled_deviation <- weighted.mean(.x$mean_deviation, weights)
-#             within_ss <- sum(pmax(weights - 1, 0) * coalesce(.x$sd_value, 0)^2)
-#             between_ss <- sum(weights * (.x$mean_value - pooled_mean)^2)
-#             pooled_sd <- if (total_n > 1L) {
-#                 sqrt((within_ss + between_ss) / (total_n - 1L))
-#             } else {
-#                 NA_real_
-#             }
-#             tibble(
-#                 n = total_n,
-#                 mean_value = pooled_mean,
-#                 mean_deviation = pooled_deviation,
-#                 pooled_sd = pooled_sd,
-#                 se_deviation = if (total_n > 1L) pooled_sd / sqrt(total_n) else NA_real_
-#             )
-#         }) %>%
-#         rename(group = all_of(grouping)) %>%
-#         mutate(group = as.character(group))
+# bar plots of pooled deviation level 
 
-#     if (is.null(ylim)) {
-#         error_top <- pooled_data$mean_deviation + error_multiplier * pooled_data$se_deviation
-#         error_bottom <- pooled_data$mean_deviation - error_multiplier * pooled_data$se_deviation
-#         plot_range <- range(c(pooled_data$mean_deviation, error_top, error_bottom), na.rm = TRUE)
-#         padding <- max(diff(plot_range) * 0.1, 1)
-#         ylim <- plot_range + c(-padding, padding)
-#     }
+make_barplot_data <- function(data, aggragationType) {
+    if (aggragationType=="treatment"){
+        
+        barplot_data <- tibble(
+            
+        )
+         <- data %>%
 
-#     group_levels <- if (grouping == "treatment") {
-#         c("mirror", "inequalities")
-#     } else {
-#         c("classic", "super")
-#     }
-#     group_levels <- group_levels[group_levels %in% pooled_data$group]
-#     point_offsets <- seq(-0.8, 0.8, length.out = max(length(group_levels), 1L))
-#     point_colors <- if (grouping == "treatment") {
-#         c(mirror = "gray35", inequalities = "black")
-#     } else {
-#         c(classic = "gray35", super = "black")
-#     }
-#     point_symbols <- if (grouping == "treatment") {
-#         c(mirror = 21, inequalities = 22)
-#     } else {
-#         c(classic = 21, super = 24)
-#     }
-
-#     old_par <- par(
-#         mfrow = c(1, 3),
-#         mar = c(4, 4, 3, 1),
-#         oma = c(0, 0, 2, 0)
-#     )
-#     on.exit(par(old_par), add = TRUE)
-
-#     family_titles <- c(G = "Gains", L = "Losses", A = "Mixed")
-#     for (family in c("G", "L", "A")) {
-#         family_data <- pooled_data %>% filter(mpl_family == family)
-#         x_values <- family_data$probability
-#         if (length(x_values) == 0L) {
-#             x_limits <- c(0, 100)
-#         } else {
-#             x_limits <- range(x_values) + c(-5, 5)
-#         }
-
-#         plot(
-#             NA,
-#             xlim = x_limits,
-#             ylim = ylim,
-#             xlab = "Probability / amount",
-#             ylab = "Deviation from expected value",
-#             main = family_titles[[family]],
-#             bty = "n",
-#             xaxt = "n"
-#         )
-#         axis(1, at = sort(unique(x_values)))
-#         abline(h = 0, lty = 2)
-
-#         for (group_index in seq_along(group_levels)) {
-#             group_name <- group_levels[[group_index]]
-#             group_data <- family_data %>% filter(group == group_name)
-#             if (nrow(group_data) == 0L) {
-#                 next
-#             }
-#             x_position <- group_data$probability + point_offsets[[group_index]]
-#             error <- error_multiplier * group_data$se_deviation
-#             error[is.na(error)] <- 0
-#             points(
-#                 x_position,
-#                 group_data$mean_deviation,
-#                 pch = point_symbols[[group_name]],
-#                 bg = if (grouping == "treatment" && group_name == "mirror") "white" else point_colors[[group_name]],
-#                 col = "black",
-#                 cex = 1.2
-#             )
-#             if (any(error > 0)) {
-#                 arrows(
-#                     x0 = x_position[error > 0],
-#                     y0 = (group_data$mean_deviation - error)[error > 0],
-#                     x1 = x_position[error > 0],
-#                     y1 = (group_data$mean_deviation + error)[error > 0],
-#                     code = 3,
-#                     angle = 90,
-#                     length = 0.05,
-#                     col = point_colors[[group_name]],
-#                     lwd = 0.8
-#                 )
-#             }
-#         }
-
-#         legend(
-#             "topright",
-#             legend = group_levels,
-#             pch = unname(point_symbols[group_levels]),
-#             pt.bg = ifelse(
-#                 grouping == "treatment" & group_levels == "mirror",
-#                 "white",
-#                 unname(point_colors[group_levels])
-#             ),
-#             col = "black",
-#             bty = "n",
-#             title = if (grouping == "treatment") "Treatment" else "Incentive"
-#         )
-#     }
-#     title(main = lab, outer = TRUE)
-
-#     invisible(pooled_data)
-# }
-
-main_plot(plot_data = mpl_plot_data, grouping = "treatment", lab = "MPL deviations by treatment")
-
+    }
+}
 
 cat("Participant records:", length(participant_records), "\n")
 cat("Trial rows:", nrow(trial_data), "\n")
