@@ -783,7 +783,7 @@ const fr = {
             ],
         },
         q3: {
-            promptIncentives: `Dernière question : pour chaque choix, quelle est l'instruction qui vous a été donnée ?`,
+            promptIncentives: `Dernière question : pour chaque choix, quelle est l'instruction qui vous a été donnée (cliquez en haut à droite pour un rappel) ?`,
             optionsMain: [
                 `Choisir le lot qui rapporte le plus.`,
                 `Choisir le lot que je préfère.`,

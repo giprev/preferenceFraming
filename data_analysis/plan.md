@@ -68,11 +68,13 @@ The .csv file should have one line per trial.
 
 Completed: `test_16-10-2026.csv` now contains all 277 trials from all 3 participant records, with the union of every field found in the raw data.
 
+Participant exclusion: after the CSV round-trip validation, participant records containing a trial with `task == "comprehensionFailure"` are excluded from `analysis_data` together with all of their trials. The raw-derived CSV remains unchanged for auditability. The parser reports the number of excluded participant records and trial rows and validates that no failure trial remains in `analysis_data`.
+
 2. Secondly we should work on a R structure that enables to run tests and statistical analysis.
     1. We should see what is the best R structure to run statistical analysis and plotting and do data exploration. I suggest data frames, but you could help me confirm it is the best structure to work on.
     2. We have to create the main environment data file on which we will work thoughout the analysis, of the structure determined previously. If it is indeed a data frame we should convert the csv file into a dataframe, excluding some non-interesting columns : success, trial_type, trial_index, internal_node_id, participant_record, view_history.
 
-Completed: `analysis_data` is the main tibble/dataframe. It is loaded from the validated CSV and excludes the six listed jsPsych metadata columns without changing the number of trial rows or number of participants. 
+Completed: `analysis_data` is the main tibble/dataframe. It is loaded from the validated CSV and excludes the six listed jsPsych metadata columns; participants who fail comprehension and all of their trial rows are excluded as documented above.
 
 3. Thirdly we aim to make add some data of interest in the dataframe. Namely, we want to calculate for each mpl trial that is not part of the instruction what is the corresponding certainty equivalent. This depends on the swtiching point of the participant, the mplType and the choices. We also want to create a binary named "switch", which indicates whether the participant switched or not. 
     - Create a column named CE for the certainty equivalents and LE for the lottery equivalent and put the results there.
@@ -96,18 +98,30 @@ Step 4 completed: `prepare_mpl_plot_data()` creates the validated summary input 
 
 ## analysis of the treatment variable instructions (`preferences` vs `inequalities` also called objective-goal treatment)
 - one main plot with inequalities versus mirror.
-- one main_plot for the preference treatment and one for the objective-goal treatment. They pool results of the corresponding treatment.
-- then 2 difference main_plot : plotting the difference between preference treatment deviations and objective-goal deviations. The first plot plots the difference at the aggregate level (substract one mean deviation from the other), and the other at the subject level : plots the difference of deviation between treatment for each task by participant. If one deviation is not available for one task then counts the difference as missing (do not count the difference if one deviation misses).
-- Then a bar plot pooling all deviations on all mpl types and graphing the mean deviation for preferences (first bar), objective goal (second bar) and difference at the subject level i.e. the difference for each identical mpl at the subject level (third bar). Each time arrows for the 95% confidence interval should be added, and also note the p-value of the difference between the preference and the objective-goal treatments. The inference should take into account the clustered data (multiple observations per participant).
+<!-- (Cancelled) - then 2 difference main_plot : plotting the difference between preference treatment deviations and objective-goal deviations. The first plot plots the difference at the aggregate level (substract one mean deviation from the other), and the other at the subject level : plots the difference of deviation between treatment for each task by participant. If one deviation is not available for one task then counts the difference as missing (do not count the difference if one deviation misses). -->
+<!-- - (Not now) Then a bar plot pooling all deviations on all mpl types and graphing the mean deviation for preferences (first bar), objective goal (second bar) and difference at the subject level i.e. the difference for each identical mpl at the subject level (third bar). Each time arrows for the 95% confidence interval should be added, and also note the p-value of the difference between the preference and the objective-goal treatments. The inference should take into account the clustered data (multiple observations per participant). -->
 
 ## analysis of the treatment variable incentives (`super` vs `classic`) and the interaction with the instruction treatments
 - first one main_plot pooling all data for `super` mpls and one on all data for `classic` mpls. S.d. should take into account that some participants will give two data points and so cluster the standard error (because they can do e.g. GO10 classic in the objective-goal/inequalities and in the preference treatment). 
-- then 2 difference main_plot, plotting the difference between classic treatment deviations and super treatment deviations. The first plot plots the difference at the aggregate level (substract one mean deviation from the other), and the other at the subject level : plots the difference of deviation between treatment for each task by participant. If one deviation is not available for one task then counts the difference as missing (do not count the difference if one deviation misses). Take into accuont that the data is clustered at the participant level for the inference part (standard errors).
-- then a bar plot of the mean deviation in objective-goal vs preference treatments. The two first bar pots the mean difference, and the two second the difference but divided by the smallest deviation, so it become a ratio. E.g. if mean deviaiton is 5 in super mpls goal and 8 in classic mpls in the preference treatment, then in the first bar it 3 and in the second bar it is (8-5)/5.
+<!-- - then 2 difference main_plot, plotting the difference between classic treatment deviations and super treatment deviations. The first plot plots the difference at the aggregate level (substract one mean deviation from the other), and the other at the subject level : plots the difference of deviation between treatment for each task by participant. If one deviation is not available for one task then counts the difference as missing (do not count the difference if one deviation misses). Take into accuont that the data is clustered at the participant level for the inference part (standard errors). -->
+- a bar plot. All the inferences must be made on individual mean level in the relevant groups, not on the choice level because it could artificially underestimate the variance. All the bars should also have arrows representing two standard deviation on each (above and below). There should be the p-value of the difference between each pairs of bars : 1st against 2nd, 3rd against 4th, 5th against 6th, probably using wilcoxon tests. First do the data tables, in a second step after validation the plots. The y-axis on the left should be difference and on the right percentage difference, so the 4 first bars don't share their difference y-axis with the 5th and 6th's percentage difference.
+    - first bar : mean deviation in super mpls, pooling on treatments
+    - scecond bar : mean deviation in classic mpls, pooling on treatments
+    - third bar : mean difference in deviation within treatment mirror (preferences)
+    - fourth bar : mean difference in deviation within treatment inequalities (obj goal)
+    - fifth bar : analogue of third bar but in percentage: the difference in between super and classic difference / classic difference
+    - sixth bar : analogue of fourth bar but in percentage: the difference in between super and classic difference / classic difference
+
+Completed: `make_incentive_deviation()` now creates participant-level mean, treatment-difference, and percentage-difference tables for the six bar plots. It uses `super - classic`, participant-level SEs, and paired Wilcoxon tests. `barplot_data` contains the six bar values and SEs plus the pooled and interaction p-values. The current test data produce one bar-table row from 3 participants and 90 valid MPL equivalents.
+
+Completed: `plot_incentive_deviation_bars()` creates the six-bar ggplot2 visualization with ±2 SE error bars and paired Wilcoxon p-value annotations. Super/mirror use `#E7B800`; classic/inequalities use `#00AFBB`. The PNG is saved under `data/figures_test_14112026/`.
+
+- a bar plot analyzing the impact of the order of the treatment on deviations. By order I mean
+
 
 ## additional data
-- do a main plot for gain lotteries with the data of the last 5 questions (artihmeticTrials)
-- bar graphic of mean time (rt on mpls), cognitive uncertainty (reverse coded in the data) and self reported attention for preferences annd goal-objective (`inequalities`) treatment.
-- do the same bar graphic with the difference of the same variables between super and classic (difference in time etc.)
+<!-- (not now) - do a main plot for gain lotteries with the data of the last 5 questions (artihmeticTrials) -->
+- I would like to do the same 6 bars graphics as the one for deviation differences in super and classic (and their interaction with the treatment), but instead of deviations there should be reaction time (in the mpl tasks) for the first graphic and cognitive uncertainty (in the mpl tasks) for the second. Pay attention that reverse encoded : 0 is complete uncertainty and 100 is certainty. You should not keep this sense, and instead in the plot have 100 = uncertainty.
 - compute the correlation between deviations and time, cognitive uncertainty and self-reported attention
 
+Completed: MPL reaction time and cognitive uncertainty are now prepared with the same six-bar structure as deviations. Each metric uses all valid incentivized MPL rows, independently of whether a CE/LE deviation could be calculated. It is first averaged within subject and incentive status (and within subject, treatment, and incentive status for treatment differences), then summarized across subjects with subject-level SD/SE and paired Wilcoxon tests. Cognitive uncertainty is plotted as `100 - CU`, so higher values mean greater uncertainty. Correlation analyses remain pending.

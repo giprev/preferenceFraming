@@ -72,7 +72,7 @@ let failedQMirror = 0; // number of times mirror comprehension questions were fa
 let incorrectQCountMirror = 0; // number of incorrect answers on the last mirror question trial
 let missedQCountMirror = 0; // number of missed incorrect answers on the last mirror question trial
 
-let maxQTrials = 4;
+let maxQTrials = 10;
 let showExplanationsQuestionsMirrors = false;
 let showExplanationsQuestionsLotteries = false;
 
