@@ -69,6 +69,7 @@ let failedQLottery = 0; // number of times lottery comprehension questions were 
 let incorrectQCountLottery = 0; // number of incorrect answers on the last lottery question trial
 let missedQCountLottery = 0; // number of missed incorrect answers on the last lottery question trial
 let failedQMirror = 0; // number of times mirror comprehension questions were failed
+let failedQInequalities = 0 // number of times inequalities comprehension questions were failed
 let incorrectQCountMirror = 0; // number of incorrect answers on the last mirror question trial
 let missedQCountMirror = 0; // number of missed incorrect answers on the last mirror question trial
 
@@ -810,8 +811,14 @@ const comprehensionQuestionsMPLMirror = {
         console.log("incorrectQCountMirror is", incorrectQCountMirror, "and should be = to questions_incorrect.length =", questions_incorrect.length)
 
         if (!all_correct) {
-            failedQMirror += 1;
-            console.log("is failed Q Mirror increased", failedQMirror)
+            if (treatIs == "ineq") {
+                failedQInequalities += 1;
+                console.log("is failed Q Inequalities increased", failedQInequalities)
+            }
+            else if (treatIs == "mirr") {
+                failedQMirror += 1;
+                console.log("is failed Q Mirror increased", failedQMirror)
+            }
         }
 
         // Save comprehensive results to trial data
@@ -822,6 +829,7 @@ const comprehensionQuestionsMPLMirror = {
         data.num_incorrect = questions_incorrect.length;
         data.detailed_results = detailed_results;
         data.incorrectQCountMirror = incorrectQCountMirror;
+        data.failedQuestionsCountInequalities = failedQInequalities;
         data.failedQuestionsCountMirror = failedQMirror;
 
         console.log(`MPL Comprehension Results: ${questions_correct.length}/${comprehensionQuestionsMPLMirror.questions.length} correct`);
@@ -989,15 +997,26 @@ const loopAgainSpanMplMirror = {
             yourRAreIncorrect = fr.loopAgainSpanMpl.yourRAreIncorrectPlural;
             missCorrectAnswer = fr.loopAgainSpanMpl.missCorrectAnswerPlural;
         }
-
-        return [
-            `<div style="max-width: 1200px"> <p>${language.loopAgainSpanMpl.failed}</p>
+        if (treatIs == "mirr") {
+            return [
+                `<div style="max-width: 1200px"> <p>${language.loopAgainSpanMpl.failed}</p>
+            <p>${language.loopAgainSpanMpl.surveyAgain}</p>
+            <p>${language.loopAgainSpanMpl.maximumRepetition.replace('{trialQCount}', failedQMirror + 1).replace('{maxQTrials}', maxQTrials)}</p>
+            <p>${language.loopAgainSpanMpl.readInstructions}</p>
+            <p>${language.loopAgainSpanMpl.clickNext}</p>
+            </div>`
+            ]
+        }
+        else if (treatIs == "ineq") {
+            return [
+                `<div style="max-width: 1200px"> <p>${language.loopAgainSpanMpl.failed}</p>
         <p>${language.loopAgainSpanMpl.surveyAgain}</p>
-        <p>${language.loopAgainSpanMpl.maximumRepetition.replace('{trialQCount}', failedQMirror + 1).replace('{maxQTrials}', maxQTrials)}</p>
+        <p>${language.loopAgainSpanMpl.maximumRepetition.replace('{trialQCount}', failedQInequalities + 1).replace('{maxQTrials}', maxQTrials)}</p>
         <p>${language.loopAgainSpanMpl.readInstructions}</p>
         <p>${language.loopAgainSpanMpl.clickNext}</p>
         </div>`
-        ]
+            ]
+        }
     },
     show_clickable_nav: true,
     button_label_next: language.button.next,
@@ -4128,7 +4147,11 @@ const comprehensionQuestionsMPLMirrorWithCheckIncentives = {
                 console.log("last.questions_correct.length is ", last.questions_correct.length);
                 // Check if fewer than 4 questions were correct
                 // return last && last.questions_correct.length == 4;
-                return last && last.questions_correct.length < 3 && failedQMirror < maxQTrials; // 3 bc there are 3 questions
+                if (treatIs == "mirr") {
+                    return last && last.questions_correct.length < 3 && failedQMirror < maxQTrials; // 3 bc there are 3 questions
+                } else if (treatIs == "ineq") {
+                    return last && last.questions_correct.length < 4 && failedQInequalities < maxQTrials; // 4 bc there are 4 questions
+                }
             }
         },
         {
@@ -4139,7 +4162,11 @@ const comprehensionQuestionsMPLMirrorWithCheckIncentives = {
                 console.log("last.questions_correct.length is ", last.questions_correct.length);
                 // Check if fewer than 4 questions were correct
                 // return last && last.questions_correct.length < 4;
-                return failedQMirror >= maxQTrials;
+                if (treatIs == "mirr") {
+                    return failedQMirror >= maxQTrials;
+                } else if (treatIs == "ineq") {
+                    return failedQInequalities >= maxQTrials;
+                }
             }
         }
     ],

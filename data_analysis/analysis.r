@@ -3,7 +3,7 @@ rm(list = ls())
 setwd("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis")
 PATH_TO_DATA <- "/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis/data"
 
-dir.create(file.path(PATH_TO_DATA, "figures_test_17112026"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(PATH_TO_DATA, "figures_pilot1_18112026"), showWarnings = FALSE, recursive = TRUE)
 getwd()
 
 library(jsonlite)
@@ -14,8 +14,9 @@ library(tidyverse)
 library(patchwork)
 
 
-RAW_FILE <- file.path(PATH_TO_DATA, "test_17-11-2026.txt")
-CSV_FILE <- file.path(PATH_TO_DATA, "test_17-11-2026.csv")
+
+RAW_FILE <- file.path("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/dataExperiment/preferenceFraming/data_pilot1_18112026.txt")
+CSV_FILE <- file.path(PATH_TO_DATA, "data_pilot1_18112026.csv")
 
 raw_lines <- readLines(RAW_FILE, warn = FALSE) # produce a character vector of lines from the raw data file, each line is a JSON string representing a participant record
 if (any(!nzchar(trimws(raw_lines)))) { # nzchar check if the string is not empty, trimws removes leading and trailing whitespace. If any line is empty, it will return TRUE
@@ -398,7 +399,12 @@ mpl_group_summary_incentive_order1 <- summarize_mpl_by_group(plot_observations%>
 mpl_group_summary_treatment_order2 <- summarize_mpl_by_group(plot_observations%>%filter(subBlock %in% c(15:28)), aggregationType = "treatment")
 mpl_group_summary_incentive_order2 <- summarize_mpl_by_group(plot_observations%>%filter(subBlock %in% c(15:28)), aggregationType = "incentive")
 
-mainPlot <- function(F, aggregationType, lab = "TEST TITRE", ylim = c(-20, 20)) {
+mainPlot <- function(F, aggregationType, lab = "TEST TITRE", ylim = c(-20, 20), output_file = NULL) {
+    if (!is.null(output_file)) {
+        dir.create(dirname(output_file), showWarnings = FALSE, recursive = TRUE)
+        png(output_file, width = 10, height = 6, units = "in", res = 300)
+    }
+
     # we use all parameters of inequalities when aggregationType = "treatment" for classic mpls when aggregationType = "incentive"
     cex <- 1.7
     pt.cex <- 0.8
@@ -527,17 +533,60 @@ mainPlot <- function(F, aggregationType, lab = "TEST TITRE", ylim = c(-20, 20)) 
     # Plot A types (triangle shape)
     x <- F %>% filter(mpl_family == "A")
     plot_points(x, inequalities_color = colors$inequalities, mirror_color = colors$mirror, pch_type = 25, show_labels = TRUE)
+
+    if (!is.null(output_file)) {
+        dev.off()
+    }
 }
 
-mainPlot(mpl_group_summary_treatment, aggregationType = "treatment", lab = "MPL deviations by treatment test", ylim = c(-20, 20))
-mainPlot(mpl_group_summary_incentive, aggregationType = "incentive", lab = "MPL deviations by incentive test", ylim = c(-20, 20))
+PILOT_FIGURES_DIR <- file.path(PATH_TO_DATA, "figures_pilot1_18112026")
+dir.create(PILOT_FIGURES_DIR, showWarnings = FALSE, recursive = TRUE)
+
+mainPlot(
+    mpl_group_summary_treatment,
+    aggregationType = "treatment",
+    lab = "MPL deviations by treatment test",
+    ylim = c(-20, 20),
+    output_file = file.path(PILOT_FIGURES_DIR, "mpl_deviations_by_treatment.png")
+)
+mainPlot(
+    mpl_group_summary_incentive,
+    aggregationType = "incentive",
+    lab = "MPL deviations by incentive test",
+    ylim = c(-20, 20),
+    output_file = file.path(PILOT_FIGURES_DIR, "mpl_deviations_by_incentive.png")
+)
 
 # from objective goal to preferences there should be no behavioral change, maybe a slight amelioration due to learning
-# from preference to objective goal there should be less deviation, if any change.
-mainPlot(mpl_group_summary_treatment_order1, aggregationType = "treatment", lab = "MPL deviations by treatment order 1 test", ylim = c(-20, 20))
-mainPlot(mpl_group_summary_incentive_order1, aggregationType = "incentive", lab = "MPL deviations by incentive order 1 test", ylim = c(-20, 20))
-mainPlot(mpl_group_summary_treatment_order2, aggregationType = "treatment", lab = "MPL deviations by treatment order 2 test", ylim = c(-20, 20))
-mainPlot(mpl_group_summary_incentive_order2, aggregationType = "incentive", lab = "MPL deviations by incentive order 2 test", ylim = c(-20, 20))
+# from preference to objective goal there should be less deviation, if any
+mainPlot(
+    mpl_group_summary_treatment_order1,
+    aggregationType = "treatment",
+    lab = "MPL deviations by treatment order 1 test",
+    ylim = c(-20, 20),
+    output_file = file.path(PILOT_FIGURES_DIR, "mpl_deviations_by_treatment_order1.png")
+)
+mainPlot(
+    mpl_group_summary_incentive_order1,
+    aggregationType = "incentive",
+    lab = "MPL deviations by incentive order 1 test",
+    ylim = c(-20, 20),
+    output_file = file.path(PILOT_FIGURES_DIR, "mpl_deviations_by_incentive_order1.png")
+)
+mainPlot(
+    mpl_group_summary_treatment_order2,
+    aggregationType = "treatment",
+    lab = "MPL deviations by treatment order 2 test",
+    ylim = c(-20, 20),
+    output_file = file.path(PILOT_FIGURES_DIR, "mpl_deviations_by_treatment_order2.png")
+)
+mainPlot(
+    mpl_group_summary_incentive_order2,
+    aggregationType = "incentive",
+    lab = "MPL deviations by incentive order 2 test",
+    ylim = c(-20, 20),
+    output_file = file.path(PILOT_FIGURES_DIR, "mpl_deviations_by_incentive_order2.png")
+)
 
 
 # bar plots of pooled deviation level
@@ -975,19 +1024,19 @@ plot_incentive_deviation_bars(barplot_data)
 
 incentive_barplot <- plot_incentive_deviation_bars(
     barplot_data,
-    file.path(PATH_TO_DATA, "figures_test_17112026", "incentive_deviation_bars.png")
+    file.path(PATH_TO_DATA, "figures_pilot1_18112026", "incentive_deviation_bars.png")
 )
 plot_incentive_deviation_bars(barplot_data)
 
 reaction_time_barplot <- plot_incentive_deviation_bars(
     reaction_time_barplot_data,
-    file.path(PATH_TO_DATA, "figures_test_17112026", "incentive_reaction_time_bars.png")
+    file.path(PATH_TO_DATA, "figures_pilot1_18112026", "incentive_reaction_time_bars.png")
 )
 plot_incentive_deviation_bars(reaction_time_barplot_data)
 
 cognitive_uncertainty_barplot <- plot_incentive_deviation_bars(
     cognitive_uncertainty_barplot_data,
-    file.path(PATH_TO_DATA, "figures_test_17112026", "incentive_cognitive_uncertainty_bars.png")
+    file.path(PATH_TO_DATA, "figures_pilot1_18112026", "incentive_cognitive_uncertainty_bars.png")
 )
 plot_incentive_deviation_bars(cognitive_uncertainty_barplot_data)
 
