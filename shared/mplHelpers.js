@@ -645,16 +645,79 @@ function generateShuffledArray() { // generate an array with numbers 1-12, with 
     return arr;
 }
 
-function generateIndexSuperMPLs(l) {
+function generateShuffledArray() { // generate an array with numbers 1-12, with 2 of them duplicated, and the order shuffled. Each number is then mapped to a MPL type
+    // Create base array 1-12
+    let arr = Array.from({ length: 12 }, (_, i) => i + 1);
+
+    // Shuffle the main array directly
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    // Now randomly select 2 different indices to duplicatte
+    let firstIndex = Math.floor(Math.random() * 12);
+    let secondIndex;
+    do {
+        secondIndex = Math.floor(Math.random() * 12);
+    } while (secondIndex === firstIndex);
+
+    // Add the duplicates at the end
+    arr.push(arr[firstIndex]);
+    arr.push(arr[secondIndex]);
+
+    return arr;
+}
+
+
+function generateShuffledArrayIncentives() {
+    // Shuffle an array using Fisher-Yates
+    const shuffle = values => {
+        const arr = [...values];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    };
+
+    // Generate and shuffle numbers 1-12
+    const arr = shuffle(
+        Array.from({ length: 12 }, (_, i) => i + 1)
+    );
+
+    // Select one random number from the first 6
+    const firstDuplicate = arr[
+        Math.floor(Math.random() * 6)
+    ];
+
+    // Select one random number from the last 6
+    const secondDuplicate = arr[
+        6 + Math.floor(Math.random() * 6)
+    ];
+
+    // Insert duplicates after each block
+    return [
+        ...arr.slice(0, 6),
+        firstDuplicate,
+        ...arr.slice(6, 12),
+        secondDuplicate
+    ];
+}
+
+
+function generateIndexSuperMPLs(l, orderIncentive) {
     let moreIncentivized = Array(numberSuperIncentivizedMPLs).fill(1); // 7 more incentivized MPLs
     let others = new Array(l - moreIncentivized.length).fill(0);
-    let combined = moreIncentivized.concat(others);
+    let combined
 
-    // Shuffle the combined array to randomize the positions of the super MPLs
-    for (let i = combined.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [combined[i], combined[j]] = [combined[j], combined[i]];
+    if (orderIncentive == 2) {
+        combined = others.concat(moreIncentivized);
+    } // 7 more incentivized MPLs at the end
+    else if (orderIncentive == 1) {
+        combined = moreIncentivized.concat(others);
     }
+
     console.log("Generated index for super MPLs (1 = super MPL, 0 = regular MPL):", combined);
     return combined;
 }

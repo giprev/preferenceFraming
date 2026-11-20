@@ -734,11 +734,11 @@ const fr = {
         titleMain: "Questions de compréhension",
         titleTraining: "Questions de compréhension (entraînement)",
     },
-    comprehensionMPLExplanation: `Vous devez réussir les deux questions des deux parties des questions de compréhension pour continuer l'expérience. Si vous échouez plus de quatre fois à l'une des deux parties,
+    comprehensionMPLExplanation: `Vous devez réussir les trois questions des deux parties des questions de compréhension pour continuer l'expérience. Si vous échouez plus de 10 fois à l'une des deux parties,
     l'expérience se terminera et vous serez payé·e {notUnderstoodPayment}€, en plus des bonus des deux premières parties de l'expérience. 
     <br>
     Vous pouvez cliquer sur le bouton en haut à droite pour afficher les instructions.`,
-    comprehensionMPLExplanationIncentives: `Vous devez réussir les deux questions. Si vous échouez plus de quatre fois
+    comprehensionMPLExplanationIncentives: `Vous devez réussir les trois questions. Si vous échouez plus de dix fois
     l'expérience se terminera et vous serez payé·e {basePaymentMPLIncentives}€. 
     <br>
     Vous pouvez cliquer sur le bouton en haut à droite pour afficher les instructions.`,
@@ -956,6 +956,12 @@ const fr = {
         treatmentMirr: "À partir de maintenant, vous devez <b>choisir les lots que vous préférez</b>.",
         treatmentIneq: "À partir de maintenant, vous devez <b>choisir les lots qui rapportent le plus</b>.",
         pressKey: "Appuyez sur n'importe quelle touche pour découvrir voir les nouvelles règles."
+    },
+    announceIncentiveStatusSerie: {
+        title: "Changement de règles",
+        super: "Les 7 prochains tours sont des <span style='color: #D4AF37'><b>💰 Super Tours 💰</b></span> ! Ils peuvent être sélectionnés pour le paiement.",
+        classic: "Les 7 prochains tours sont des <span style='color: #275293df'><b>Tours Classiques</b></span>. Ils ne seront pas payés.",
+        pressKey: "Appuyez sur n'importe quelle touche pour continuer."
     },
     rulesWillChange: {
         attention: "Attention, ces règles vont changer au milieu de l'expérience !",

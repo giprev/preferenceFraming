@@ -51,6 +51,9 @@ if (jatos !== undefined && jatos.urlQueryParameters !== undefined && jatos.urlQu
 }
 
 let treatmentGoal = '';
+let orderIncentiveBlockMirrors = Math.floor(Math.random() * 2) + 1; // either 1 or 2, to randomize the order of the super MPLs in the incentives experiment
+let orderIncentiveBlockInequalities = Math.floor(Math.random() * 2) + 1; // either 1 or 2, to randomize the order of the super MPLs in the incentives experiment
+console.log("orderIncentiveBlockMirrors is", orderIncentiveBlockMirrors, " orderIncentiveBlockInequalities is", orderIncentiveBlockInequalities)
 if (Math.random() < 0.5) { treatmentGoal = "ineq"; } else { treatmentGoal = "mirr" }; // treatment for mpl Incentives is either "inequalities" (goal is to find the highest value) or "mirror" (Oprea's mirrors)
 let totalFdsTrainingTrials = 9; // number of rounds of the calibration
 

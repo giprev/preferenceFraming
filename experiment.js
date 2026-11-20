@@ -102,13 +102,18 @@ function formatSeconds(ms) {
 /************* Variables MPLIncentives ****************/
 let numberTrialsMPLIncentives = 14;
 let numberSuperIncentivizedMPLs = 7; // number of MPLs that are more incentivized than the others in the MPL incentives task
-let superArray_ineq = generateIndexSuperMPLs(numberTrialsMPLIncentives) // indicates which MPLs are "super" (i.e. with higher incentives) in the MPL incentives task
+let superArray_ineq = generateIndexSuperMPLs(numberTrialsMPLIncentives, orderIncentiveBlockInequalities) // indicates which MPLs are "super" (i.e. with higher incentives) in the MPL incentives task
 console.log("superArray_ineq is ", superArray_ineq)
-let superArray_mirr = generateIndexSuperMPLs(numberTrialsMPLIncentives) // indicates which MPLs are "super" (i.e. with higher incentives) in the MPL incentives task
+let superArray_mirr = generateIndexSuperMPLs(numberTrialsMPLIncentives, orderIncentiveBlockMirrors) // indicates which MPLs are "super" (i.e. with higher incentives) in the MPL incentives task
 console.log("superArray_mirr is ", superArray_mirr)
 const luckyPpIncentives = getRandomInt(1, propSelecForMPLIncentives); // determine if the participant is selected to be paid a random draw of an MPL
 console.log("luckyPpIncentives is ", luckyPpIncentives)
 let treatHasChanged = false; // to indicate whether the treatment has changed (from mirror to inequalities or the inverse). It is used to shorten the instructions of the MPLs when participants see them a second time.
+let incentiveSeriesAnnounceCountMirrors = 0; // indicates how many times the announcement of the incentives series has been shown for the mirror treatment
+let incentiveSeriesAnnounceCountInequalities = 0;
+
+
+
 
 /*************** INSTRUCTIONS ***************/
 
@@ -1316,8 +1321,10 @@ const prolific_id_loop = {
 
 let numbersArray_lottery = generateShuffledArray(); // for the experiment 2, lottery treatment
 let numbersArray_mirror = generateShuffledArray(); // for the experiment 2, mirror treatment
-let numbersArray_mirror_incentives_ineq = generateShuffledArray(); //for the experiment 1, inequalities treatment
-let numbersArray_mirror_incentives_mirr = generateShuffledArray(); // for the experiment 1, mirror treatment
+let numbersArray_mirror_incentives_ineq = generateShuffledArrayIncentives(); //for the experiment 1, inequalities treatment
+let numbersArray_mirror_incentives_mirr = generateShuffledArrayIncentives(); // for the experiment 1, mirror treatment
+console.log("numbersArray_mirror_incentives_ineq is ", numbersArray_mirror_incentives_ineq)
+console.log("numbersArray_mirror_incentives_mirr is ", numbersArray_mirror_incentives_mirr)
 
 let mpl_html_array_lottery = [];
 let mpl_html_array_mirror = [];
@@ -3046,6 +3053,71 @@ const changeTreatment = { // change from inequalities to mirror or the inverse
     }
 };
 
+
+const announceIncentiveStatusSerie = { // announce that a bloc of 7 super/classic tours
+    type: "html-keyboard-response",
+    stimulus: function () {
+
+        if (treatIs == "mirr") {
+            if ((incentiveSeriesAnnounceCountMirrors == 0 && orderIncentiveBlockMirrors == 1) || (incentiveSeriesAnnounceCountMirrors == 1 && orderIncentiveBlockMirrors == 2)) {
+                // instructions say bloc is super
+                return `<div style="max-width: 1200px">
+                    <div style="border: 3px solid #D4AF37; background-color: #FFF3E0; padding: 20px; margin: 20px auto; border-radius: 8px;">
+                        <div style="background-color: white; padding: 15px; border-radius: 4px; border-left: 4px solid #D4AF37;">
+                            <h2 style="font-size: 1.5em; margin: 0;"> ${language.announceIncentiveStatusSerie.super} </h2> 
+                        </div>
+                    </div>
+                </div>
+                <p>${language.announceIncentiveStatusSerie.pressKey}</p>`
+            }
+            else if ((incentiveSeriesAnnounceCountMirrors == 0 && orderIncentiveBlockMirrors == 2) || (incentiveSeriesAnnounceCountMirrors == 1 && orderIncentiveBlockMirrors == 1)) {
+                // instructions say bloc is classic
+                return `<div style="max-width: 1200px">
+                    <div style="border: 3px solid #275293df; background-color: #F0F8FF; padding: 20px; margin: 20px auto; border-radius: 8px;">
+                        <div style="background-color: white; padding: 15px; border-radius: 4px; border-left: 4px solid #275293df;">
+                            <h2 style="font-size: 1.5em; margin: 0;"> ${language.announceIncentiveStatusSerie.classic} </h2> 
+                        </div>
+                    </div>
+                </div>
+                <p>${language.announceIncentiveStatusSerie.pressKey}</p>`
+            }
+        }
+        if (treatIs == "ineq") {
+            if ((incentiveSeriesAnnounceCountInequalities == 0 && orderIncentiveBlockInequalities == 1) || (incentiveSeriesAnnounceCountInequalities == 1 && orderIncentiveBlockInequalities == 2)) {
+                // instructions say bloc is super
+                return `<div style="max-width: 1200px">
+                    <div style="border: 3px solid #D4AF37; background-color: #FFF3E0; padding: 20px; margin: 20px auto; border-radius: 8px;">
+                        <div style="background-color: white; padding: 15px; border-radius: 4px; border-left: 4px solid #D4AF37;">
+                            <h2 style="font-size: 1.5em; margin: 0;"> ${language.announceIncentiveStatusSerie.super} </h2> 
+                        </div>
+                    </div>
+                </div>
+                <p>${language.announceIncentiveStatusSerie.pressKey}</p>`
+            }
+            else if ((incentiveSeriesAnnounceCountInequalities == 0 && orderIncentiveBlockInequalities == 2) || (incentiveSeriesAnnounceCountInequalities == 1 && orderIncentiveBlockInequalities == 1)) {
+                // instructions say bloc is classic
+                return `<div style="max-width: 1200px">
+                    <div style="border: 3px solid #275293df; background-color: #F0F8FF; padding: 20px; margin: 20px auto; border-radius: 8px;">
+                        <div style="background-color: white; padding: 15px; border-radius: 4px; border-left: 4px solid #275293df;">
+                            <h2 style="font-size: 1.5em; margin: 0;"> ${language.announceIncentiveStatusSerie.classic} </h2> 
+                        </div>
+                    </div>
+                </div>
+                <p>${language.announceIncentiveStatusSerie.pressKey}</p>`
+
+            }
+        }
+    },
+    on_finish: function () {
+        if (treatIs == "mirr") {
+            incentiveSeriesAnnounceCountMirrors++;
+        } else if (treatIs == "ineq") {
+            incentiveSeriesAnnounceCountInequalities++;
+        }
+        console.log("incentiveSeriesAnnounceCountMirrors is now ", incentiveSeriesAnnounceCountMirrors);
+    }
+};
+
 /************ define the cognitive uncertainty trials ***************/
 
 const cognitiveUncertaintyMirror = {
@@ -4150,7 +4222,7 @@ const comprehensionQuestionsMPLMirrorWithCheckIncentives = {
                 if (treatIs == "mirr") {
                     return last && last.questions_correct.length < 3 && failedQMirror < maxQTrials; // 3 bc there are 3 questions
                 } else if (treatIs == "ineq") {
-                    return last && last.questions_correct.length < 4 && failedQInequalities < maxQTrials; // 4 bc there are 4 questions
+                    return last && last.questions_correct.length < 3 && failedQInequalities < maxQTrials; // 3 bc there are 3 questions
                 }
             }
         },
@@ -4245,23 +4317,23 @@ const timeline_spanMPL_lottery = {
 };
 
 const timeline_ineq_MPLIncentives = {
-    timeline: [setup_MPLIncentives, mpl_trial /*, { conditional_function: function() { return fdsTrialNum == totalFdsSpanMplTrials + 1; }, timeline: [fdsTrialNumResetAndSubBlockReset]} */],
+    timeline: [setup_MPLIncentives, mpl_trial, { conditional_function: function () { return (subBlock == 7 || subBlock == 21); }, timeline: [announceIncentiveStatusSerie] }],
     timeline_variables: mplIncentives_html_array_ineq,
 }
 const timeline_mirr_MPLIncentives = {
-    timeline: [setup_MPLIncentives, mpl_trial /*, { conditional_function: function() { return fdsTrialNum == totalFdsSpanMplTrials + 1; }, timeline: [fdsTrialNumResetAndSubBlockReset]} */],
+    timeline: [setup_MPLIncentives, mpl_trial, { conditional_function: function () { return (subBlock == 7 || subBlock == 21); }, timeline: [announceIncentiveStatusSerie] }],
     timeline_variables: mplIncentives_html_array_mirr,
 }
 
 let experiment_MPLIncentives;
 if (treatment == "hard") { // 1 chance out of two that treatment is easy or high, and in the lab it is determined by the desk of the participant, so the pilot is counterbalanced
     experiment_MPLIncentives = {
-        timeline: [blockIs_mpl_incentives, treatisIneq, timelineInstructionsMPLIncentives, timeline_ineq_MPLIncentives, treatisMirr, changeTreatment, timelineInstructionsMPLIncentives, timeline_mirr_MPLIncentives]
+        timeline: [blockIs_mpl_incentives, treatisIneq, timelineInstructionsMPLIncentives, announceIncentiveStatusSerie, timeline_ineq_MPLIncentives, treatisMirr, changeTreatment, timelineInstructionsMPLIncentives, announceIncentiveStatusSerie, timeline_mirr_MPLIncentives]
     }
 }
 else if (treatment == "easy") {
     experiment_MPLIncentives = {
-        timeline: [blockIs_mpl_incentives, treatisMirr, timelineInstructionsMPLIncentives, timeline_mirr_MPLIncentives, treatisIneq, changeTreatment, timelineInstructionsMPLIncentives, timeline_ineq_MPLIncentives]
+        timeline: [blockIs_mpl_incentives, treatisMirr, timelineInstructionsMPLIncentives, announceIncentiveStatusSerie, timeline_mirr_MPLIncentives, treatisIneq, changeTreatment, timelineInstructionsMPLIncentives, announceIncentiveStatusSerie, timeline_ineq_MPLIncentives]
     }
 }
 

@@ -98,11 +98,23 @@ Step 4 completed: `prepare_mpl_plot_data()` creates the validated summary input 
 
 ## analysis of the treatment variable instructions (`preferences` vs `inequalities` also called objective-goal treatment)
 - one main plot with inequalities versus mirror.
+- the same plot for order =1 and order =2 
 <!-- (Cancelled) - then 2 difference main_plot : plotting the difference between preference treatment deviations and objective-goal deviations. The first plot plots the difference at the aggregate level (substract one mean deviation from the other), and the other at the subject level : plots the difference of deviation between treatment for each task by participant. If one deviation is not available for one task then counts the difference as missing (do not count the difference if one deviation misses). -->
-<!-- - (Not now) Then a bar plot pooling all deviations on all mpl types and graphing the mean deviation for preferences (first bar), objective goal (second bar) and difference at the subject level i.e. the difference for each identical mpl at the subject level (third bar). Each time arrows for the 95% confidence interval should be added, and also note the p-value of the difference between the preference and the objective-goal treatments. The inference should take into account the clustered data (multiple observations per participant). -->
+- Then a bar plot pooling all deviations on all mpl types and graphing the mean deviation for preferences (first bar), objective goal (second bar) and difference at the subject level i.e. the difference for each identical mpl at the subject level (third bar). Each time arrows for the 95% confidence interval should be added, and also note the p-value of the difference between the preference and the objective-goal treatments. The inference should take into account the clustered data (multiple observations per participant). Exclude GO50 and LO50 mpls. Then two other bar plots similar but instead of deviations it is reaction time and cognitive uncertainty. Exclude also GO50 and LO50. 
+
+Completed: `make_treatment_bar_data()` creates the three participant-level bars for each outcome (preference/mirror, objective-goal/inequalities, and mirror minus inequalities), excluding GO50 and LO50. The bars use participant-level means, standard errors, paired Wilcoxon tests, and +/-2 SE error bars. The figures are saved as `treatment_deviation_bars.png`, `treatment_RT_bars.png`, and `treatment_cognitive_uncertainty_bars.png` in `data/figures_pilot1&2/`.
+
+Completed: the treatment and incentive bar plots are also generated separately
+for order 1 (`subBlock` 1--14) and order 2 (`subBlock` 15--28), with
+`_order1` and `_order2` object and file names. For treatment comparisons within
+an order, the test is an independent Wilcoxon rank-sum test because a
+participant contributes observations to only one instruction treatment in that
+order. The order-specific difference bar is the difference of the two group
+means with the independent-groups propagated SE.
 
 ## analysis of the treatment variable incentives (`super` vs `classic`) and the interaction with the instruction treatments
 - first one main_plot pooling all data for `super` mpls and one on all data for `classic` mpls. S.d. should take into account that some participants will give two data points and so cluster the standard error (because they can do e.g. GO10 classic in the objective-goal/inequalities and in the preference treatment). 
+- the same plot for order =1 and order =2 
 <!-- - then 2 difference main_plot, plotting the difference between classic treatment deviations and super treatment deviations. The first plot plots the difference at the aggregate level (substract one mean deviation from the other), and the other at the subject level : plots the difference of deviation between treatment for each task by participant. If one deviation is not available for one task then counts the difference as missing (do not count the difference if one deviation misses). Take into accuont that the data is clustered at the participant level for the inference part (standard errors). -->
 - a bar plot. All the inferences must be made on individual mean level in the relevant groups, not on the choice level because it could artificially underestimate the variance. All the bars should also have arrows representing two standard deviation on each (above and below). There should be the p-value of the difference between each pairs of bars : 1st against 2nd, 3rd against 4th, 5th against 6th, probably using wilcoxon tests. First do the data tables, in a second step after validation the plots. The y-axis on the left should be difference and on the right percentage difference, so the 4 first bars don't share their difference y-axis with the 5th and 6th's percentage difference.
     - first bar : mean deviation in super mpls, pooling on treatments
@@ -116,12 +128,26 @@ Completed: `make_incentive_deviation()` now creates participant-level mean, trea
 
 Completed: `plot_incentive_deviation_bars()` creates the six-bar ggplot2 visualization with ±2 SE error bars and paired Wilcoxon p-value annotations. Super/mirror use `#E7B800`; classic/inequalities use `#00AFBB`. The PNG is saved under `data/figures_test_14112026/`.
 
-- a bar plot analyzing the impact of the order of the treatment on deviations. By order I mean
 
 
 ## additional data
 <!-- (not now) - do a main plot for gain lotteries with the data of the last 5 questions (artihmeticTrials) -->
 - I would like to do the same 6 bars graphics as the one for deviation differences in super and classic (and their interaction with the treatment), but instead of deviations there should be reaction time (in the mpl tasks) for the first graphic and cognitive uncertainty (in the mpl tasks) for the second. Pay attention that reverse encoded : 0 is complete uncertainty and 100 is certainty. You should not keep this sense, and instead in the plot have 100 = uncertainty.
+- could you make a table with one column for each type of gain lottery (GO10 to GO90). One line for the mean CE deviation and one line for the mean result - real value calculated in the last questions of the experiment and a third line p_value between the two, wilcoxon paired. The calculations are matched with the lotteries. For intance you have calculations in sliderArTest75 corresponding to the calculation of GO75 : (25*75)/100. You have to put the mean value of arTest75 in the column GO75 of the table, and the mean deviation in the mpls on GO75 just above, in the same column. I want this table to be displayed plotted : on the x-axis the different types of mpls ranked by probabilities, and on the y-axis deviation from expected value, with one point for arithmetic deviation and one point for CE deviation.
+- double all the bar-plots for order : selecting the values in first order or second order. It is already implemented for some mainPlots, (it means selecting mpl trials with subBlock in (1:14) for order 1 and (15:to 18) for order 2). The inference test cannot be paired for treatment (obj-goal or preferences) when they are compared given an order because each participant see each treatment in only one order (contrary to super vs incentives which they see both in the first and in the second treatement). 
+- the same incentive bar plots of deviations/RT/cognitive uncertainty depending on incentive (super or classic), substraction and %, but at the choice level and not participant level ? For the inference, use standard errors clustered at the participant level, do not assume homoskedasticity. 
+
+Completed: choice-level incentive plots are generated with trial observations
+as the descriptive unit and participant-clustered heteroskedasticity-robust
+standard errors. The same six bars are produced for deviation, reaction time,
+and cognitive uncertainty, both pooled and separately for order 1 and order 2.
+The figures are saved with `choice_level_` prefixes in
+`data/figures_pilot1&2/`.
 - compute the correlation between deviations and time, cognitive uncertainty and self-reported attention
 
+
+
+
 Completed: MPL reaction time and cognitive uncertainty are now prepared with the same six-bar structure as deviations. Each metric uses all valid incentivized MPL rows, independently of whether a CE/LE deviation could be calculated. It is first averaged within subject and incentive status (and within subject, treatment, and incentive status for treatment differences), then summarized across subjects with subject-level SD/SE and paired Wilcoxon tests. Cognitive uncertainty is plotted as `100 - CU`, so higher values mean greater uncertainty. Correlation analyses remain pending.
+
+Completed: `make_gain_arithmetic_table()` creates the requested GO10--GO90 table. It averages CE minus expected value and arithmetic answer minus expected value within participant and probability, then reports the two means, participant-level SEs, and a paired Wilcoxon p-value for each probability. The participant-level intermediate and the three-row wide table remain available as in-memory data frames in `gain_arithmetic_tables$participant_table` and `gain_arithmetic_tables$table`. `calculationVsCE` plots the two deviation series by gain MPL probability with +/-2 SE error bars and the paired p-value for each probability; it is saved as `data/figures_pilot1&2/calculationVsCE.png`.

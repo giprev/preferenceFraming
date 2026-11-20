@@ -3,22 +3,27 @@ rm(list = ls())
 setwd("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis")
 PATH_TO_DATA <- "/Users/domitilleprevost/Documents/Master E&P/Stage/coding/jatos/study_assets_root/preferenceFramingExperiment/data_analysis/data"
 
-dir.create(file.path(PATH_TO_DATA, "figures_pilot1_18112026"), showWarnings = FALSE, recursive = TRUE)
+dir_figures <- "figures_pilot1&2"
+dir.create(file.path(PATH_TO_DATA, dir_figures), showWarnings = FALSE, recursive = TRUE)
 getwd()
 
 library(jsonlite)
 library(dplyr)
 library(readr)
 library(rstatix)
-library(tidyverse)
 library(patchwork)
+library(tidyverse)
 
+file1 <- readLines("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/dataExperiment/preferenceFraming/data_pilot1_18112026.txt")
+file2 <- readLines("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/dataExperiment/preferenceFraming/data_pilot2_19112026.txt")
+raw_lines <- c(file1, file2)
 
+# writeLines(test_raw_lines, "data_test_merged.txt")
 
-RAW_FILE <- file.path("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/dataExperiment/preferenceFraming/data_pilot1_18112026.txt")
-CSV_FILE <- file.path(PATH_TO_DATA, "data_pilot1_18112026.csv")
+# RAW_FILE <- file.path("/Users/domitilleprevost/Documents/Master E&P/Stage/coding/dataExperiment/preferenceFraming/data_test_pilot1&2.txt")
+CSV_FILE <- file.path(PATH_TO_DATA, "data_pilot1&2.csv")
 
-raw_lines <- readLines(RAW_FILE, warn = FALSE) # produce a character vector of lines from the raw data file, each line is a JSON string representing a participant record
+# raw_lines <- readLines(RAW_FILE, warn = FALSE) # produce a character vector of lines from the raw data file, each line is a JSON string representing a participant record
 if (any(!nzchar(trimws(raw_lines)))) { # nzchar check if the string is not empty, trimws removes leading and trailing whitespace. If any line is empty, it will return TRUE
     stop("The raw data file contains an empty participant record.")
 }
@@ -394,12 +399,12 @@ mpl_group_summary_treatment <- summarize_mpl_by_group(plot_observations, aggrega
 mpl_group_summary_incentive <- summarize_mpl_by_group(plot_observations, aggregationType = "incentive")
 
 # now the data but filtering on block (order)
-mpl_group_summary_treatment_order1 <- summarize_mpl_by_group(plot_observations%>%filter(subBlock %in% c(1:14)), aggregationType = "treatment")
-mpl_group_summary_incentive_order1 <- summarize_mpl_by_group(plot_observations%>%filter(subBlock %in% c(1:14)), aggregationType = "incentive")
-mpl_group_summary_treatment_order2 <- summarize_mpl_by_group(plot_observations%>%filter(subBlock %in% c(15:28)), aggregationType = "treatment")
-mpl_group_summary_incentive_order2 <- summarize_mpl_by_group(plot_observations%>%filter(subBlock %in% c(15:28)), aggregationType = "incentive")
+mpl_group_summary_treatment_order1 <- summarize_mpl_by_group(plot_observations %>% filter(subBlock %in% c(1:14)), aggregationType = "treatment")
+mpl_group_summary_incentive_order1 <- summarize_mpl_by_group(plot_observations %>% filter(subBlock %in% c(1:14)), aggregationType = "incentive")
+mpl_group_summary_treatment_order2 <- summarize_mpl_by_group(plot_observations %>% filter(subBlock %in% c(15:28)), aggregationType = "treatment")
+mpl_group_summary_incentive_order2 <- summarize_mpl_by_group(plot_observations %>% filter(subBlock %in% c(15:28)), aggregationType = "incentive")
 
-mainPlot <- function(F, aggregationType, lab = "TEST TITRE", ylim = c(-20, 20), output_file = NULL) {
+mainPlot <- function(F, aggregationType, lab = "TEST TITRE", ylim = c(-10, 10), output_file = NULL) {
     if (!is.null(output_file)) {
         dir.create(dirname(output_file), showWarnings = FALSE, recursive = TRUE)
         png(output_file, width = 10, height = 6, units = "in", res = 300)
@@ -539,8 +544,8 @@ mainPlot <- function(F, aggregationType, lab = "TEST TITRE", ylim = c(-20, 20), 
     }
 }
 
-PILOT_FIGURES_DIR <- file.path(PATH_TO_DATA, "figures_pilot1_18112026")
-dir.create(PILOT_FIGURES_DIR, showWarnings = FALSE, recursive = TRUE)
+PILOT_FIGURES_DIR <- file.path(PATH_TO_DATA, dir_figures)
+# dir.create(PILOT_FIGURES_DIR, showWarnings = FALSE, recursive = TRUE)
 
 mainPlot(
     mpl_group_summary_treatment,
@@ -765,6 +770,265 @@ make_incentive_deviation <- function(data) {
 incentive_deviation_tables <- make_incentive_deviation(plot_observations)
 table_incentive_deviation <- incentive_deviation_tables$table_difference
 
+# Match each gain MPL probability with the corresponding arithmetic-test
+# answer. The participant is the inferential unit: repeated MPL observations
+# and repeated CSV copies of the arithmetic answers are averaged first.
+make_gain_arithmetic_table <- function(mpl_data, source_data) {
+    gain_data <- mpl_data %>%
+        filter(mpl_family == "G", !is.na(value)) %>%
+        transmute(
+            subject,
+            probability,
+            ce_deviation = value - expected_value
+        ) %>%
+        group_by(subject, probability) %>%
+        summarise(
+            mean_ce_deviation = mean(ce_deviation),
+            n_mpl = n(),
+            .groups = "drop"
+        )
+
+    arithmetic_fields <- paste0("sliderArTest", c(10, 25, 50, 75, 90))
+    missing_fields <- setdiff(arithmetic_fields, names(source_data))
+    if (length(missing_fields) > 0L) {
+        stop(sprintf(
+            "Gain/arithmetic table validation failed: missing fields: %s",
+            paste(missing_fields, collapse = ", ")
+        ))
+    }
+
+    arithmetic_data <- source_data %>%
+        select(subject, all_of(arithmetic_fields)) %>%
+        pivot_longer(
+            cols = all_of(arithmetic_fields),
+            names_to = "arithmetic_field",
+            values_to = "arithmetic_result"
+        ) %>%
+        mutate(
+            probability = as.numeric(sub("sliderArTest", "", arithmetic_field)),
+            arithmetic_result = suppressWarnings(as.numeric(arithmetic_result))
+        ) %>%
+        filter(!is.na(arithmetic_result)) %>%
+        group_by(subject, probability) %>%
+        summarise(
+            mean_arithmetic_result = mean(arithmetic_result),
+            n_arithmetic = n(),
+            .groups = "drop"
+        ) %>%
+        mutate(
+            expected_value = probability / 100 * 25,
+            mean_arithmetic_deviation = mean_arithmetic_result - expected_value
+        )
+
+    participant_table <- full_join(
+        gain_data,
+        arithmetic_data,
+        by = c("subject", "probability")
+    ) %>%
+        arrange(subject, probability)
+
+    if (nrow(participant_table) == 0L) {
+        stop("Gain/arithmetic table validation failed: no gain observations were found.")
+    }
+    if (nrow(arithmetic_data) == 0L) {
+        stop("Gain/arithmetic table validation failed: no arithmetic answers were found.")
+    }
+
+    probabilities <- c(10, 25, 50, 75, 90)
+    summary_rows <- lapply(probabilities, function(probability_value) {
+        paired <- participant_table %>%
+            filter(
+                probability == probability_value,
+                !is.na(mean_ce_deviation),
+                !is.na(mean_arithmetic_deviation)
+            )
+        test <- if (nrow(paired) > 0L) {
+            wilcox.test(
+                paired$mean_ce_deviation,
+                paired$mean_arithmetic_deviation,
+                paired = TRUE,
+                exact = FALSE
+            )
+        } else {
+            NULL
+        }
+
+        tibble(
+            probability = probability_value,
+            mean_ce_deviation = if (nrow(paired) > 0L) {
+                mean(paired$mean_ce_deviation)
+            } else {
+                NA_real_
+            },
+            se_ce_deviation = if (nrow(paired) > 1L) {
+                sd(paired$mean_ce_deviation) / sqrt(nrow(paired))
+            } else {
+                NA_real_
+            },
+            mean_arithmetic_deviation = if (nrow(paired) > 0L) {
+                mean(paired$mean_arithmetic_deviation)
+            } else {
+                NA_real_
+            },
+            se_arithmetic_deviation = if (nrow(paired) > 1L) {
+                sd(paired$mean_arithmetic_deviation) / sqrt(nrow(paired))
+            } else {
+                NA_real_
+            },
+            n_ce = sum(!is.na(participant_table$mean_ce_deviation) &
+                participant_table$probability == probability_value),
+            n_arithmetic = sum(!is.na(participant_table$mean_arithmetic_deviation) &
+                participant_table$probability == probability_value),
+            n_paired = nrow(paired),
+            p_value = if (is.null(test)) NA_real_ else test$p.value
+        )
+    }) %>%
+        bind_rows()
+
+    if (any(summary_rows$n_paired > summary_rows$n_ce) ||
+        any(summary_rows$n_paired > summary_rows$n_arithmetic)) {
+        stop("Gain/arithmetic table validation failed: paired counts exceed source counts.")
+    }
+
+    table_wide <- summary_rows %>%
+        select(
+            probability,
+            mean_ce_deviation,
+            mean_arithmetic_deviation,
+            p_value
+        ) %>%
+        pivot_longer(
+            cols = -probability,
+            names_to = "measure",
+            values_to = "value"
+        ) %>%
+        mutate(
+            lottery = paste0("GO", probability)
+        ) %>%
+        select(measure, lottery, value) %>%
+        pivot_wider(names_from = lottery, values_from = value) %>%
+        arrange(match(measure, c(
+            "mean_ce_deviation",
+            "mean_arithmetic_deviation",
+            "p_value"
+        )))
+
+    list(
+        participant_table = participant_table,
+        summary = summary_rows,
+        table = table_wide
+    )
+}
+
+gain_arithmetic_tables <- make_gain_arithmetic_table(
+    plot_observations,
+    analysis_data
+)
+
+calculation_vs_ce_data <- gain_arithmetic_tables$summary %>%
+    transmute(
+        probability,
+        lottery = factor(
+            paste0("GO", probability),
+            levels = paste0("GO", c(10, 25, 50, 75, 90))
+        ),
+        `CE deviation` = mean_ce_deviation,
+        `Arithmetic deviation` = mean_arithmetic_deviation,
+        `CE deviation SE` = se_ce_deviation,
+        `Arithmetic deviation SE` = se_arithmetic_deviation,
+        p_value
+    ) %>%
+    pivot_longer(
+        cols = c(`CE deviation`, `Arithmetic deviation`),
+        names_to = "measure",
+        values_to = "deviation"
+    ) %>%
+    mutate(
+        se = case_when(
+            measure == "CE deviation" ~ `CE deviation SE`,
+            measure == "Arithmetic deviation" ~ `Arithmetic deviation SE`,
+            TRUE ~ NA_real_
+        )
+    )
+
+if (nrow(calculation_vs_ce_data) != 10L ||
+    any(!is.finite(calculation_vs_ce_data$deviation)) ||
+    any(calculation_vs_ce_data$se < 0, na.rm = TRUE)) {
+    stop("Gain/arithmetic plot validation failed: invalid plotted values or SEs.")
+}
+
+calculation_vs_ce_annotations <- calculation_vs_ce_data %>%
+    group_by(probability, lottery, p_value) %>%
+    summarise(
+        y_position = max(deviation + 2 * coalesce(se, 0), na.rm = TRUE),
+        .groups = "drop"
+    ) %>%
+    mutate(
+        y_position = y_position + max(
+            0.15,
+            0.05 * diff(range(calculation_vs_ce_data$deviation))
+        ),
+        p_label = paste0("p = ", format.pval(
+            p_value,
+            digits = 2,
+            eps = 0.001
+        ))
+    )
+
+calculationVsCE <- ggplot(
+    calculation_vs_ce_data,
+    aes(x = lottery, y = deviation, color = measure, group = measure)
+) +
+    geom_hline(yintercept = 0, linewidth = 0.4, color = "grey50") +
+    geom_line(linewidth = 0.7) +
+    geom_point(size = 2.8) +
+    geom_errorbar(
+        aes(
+            ymin = deviation - 2 * se,
+            ymax = deviation + 2 * se
+        ),
+        width = 0.08,
+        linewidth = 0.5
+    ) +
+    geom_text(
+        data = calculation_vs_ce_annotations,
+        aes(x = lottery, y = y_position, label = p_label),
+        inherit.aes = FALSE,
+        color = "black",
+        size = 3.5
+    ) +
+    scale_color_manual(
+        values = c(
+            "CE deviation" = "#E7B800",
+            "Arithmetic deviation" = "#00AFBB"
+        )
+    ) +
+    labs(
+        title = "Arithmetic calculations and MPL certainty equivalents",
+        x = "Gain MPL",
+        y = "Deviation from expected value",
+        color = NULL
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+        legend.position = "top",
+        panel.grid.minor = element_blank()
+    )
+
+calculation_vs_ce_file <- file.path(
+    PATH_TO_DATA,
+    dir_figures,
+    "calculationVsCE.png"
+)
+ggsave(
+    calculation_vs_ce_file,
+    calculationVsCE,
+    width = 8,
+    height = 5,
+    units = "in",
+    dpi = 300
+)
+
 # Additional MPL metrics must not inherit the deviation-only CE/LE validity
 # filter. Keep separate trial observations so reaction time and cognitive
 # uncertainty cover every valid incentivized MPL row.
@@ -772,7 +1036,7 @@ additional_mpl_observations <- analysis_data %>%
     filter(
         task == "mpl",
         block == "mpl_incentives",
-        grepl("^[GLOA]O(10|15|25|50|75|90)$", mplType)
+        grepl("^[GLOA]O(10|15|25|75|90)$", mplType) # remove the 50% probability
     ) %>%
     transmute(
         subject,
@@ -788,6 +1052,7 @@ additional_mpl_observations <- analysis_data %>%
             isSuper == 0 ~ "classic",
             TRUE ~ NA_character_
         ),
+        subBlock,
         reaction_time = suppressWarnings(as.numeric(rt)),
         cognitive_uncertainty = 100 - suppressWarnings(as.numeric(CU))
     )
@@ -825,6 +1090,196 @@ incentive_cognitive_uncertainty_tables <- make_incentive_metric(
     additional_mpl_observations,
     "cognitive_uncertainty"
 )
+
+make_treatment_bar_data <- function(
+    data,
+    metric_column,
+    metric_label,
+    comparison = c("paired", "independent")
+) {
+    comparison <- match.arg(comparison)
+    if (!metric_column %in% names(data)) {
+        stop(sprintf("Treatment bar preparation failed: missing metric '%s'.", metric_column))
+    }
+
+    participant_means <- data %>%
+        filter(
+            !is.na(treatment),
+            !is.na(.data[[metric_column]])
+        ) %>%
+        group_by(subject, treatment) %>%
+        summarise(
+            n_observations = n(),
+            participant_mean = mean(.data[[metric_column]]),
+            .groups = "drop"
+        )
+
+    treatment_test <- participant_means %>%
+        select(subject, treatment, participant_mean) %>%
+        pivot_wider(names_from = treatment, values_from = participant_mean)
+
+    wilcox_test <- if (comparison == "paired") {
+        paired <- treatment_test %>%
+            filter(!is.na(mirror), !is.na(inequalities))
+        if (nrow(paired) > 0L) {
+            wilcox.test(
+                paired$mirror,
+                paired$inequalities,
+                paired = TRUE,
+                exact = FALSE
+            )
+        } else {
+            NULL
+        }
+    } else {
+        independent <- participant_means %>%
+            filter(treatment %in% c("mirror", "inequalities"))
+        if (n_distinct(independent$treatment) == 2L) {
+            wilcox.test(
+                participant_mean ~ treatment,
+                data = independent,
+                exact = FALSE
+            )
+        } else {
+            NULL
+        }
+    }
+
+    summary <- participant_means %>%
+        group_by(treatment) %>%
+        summarise(
+            n = n(),
+            mean_value = mean(participant_mean),
+            sd_value = if (n() > 1L) sd(participant_mean) else NA_real_,
+            se_value = if (n() > 1L) sd(participant_mean) / sqrt(n()) else NA_real_,
+            .groups = "drop"
+        )
+
+    difference_summary <- if (comparison == "paired") {
+        difference <- treatment_test %>%
+            filter(!is.na(mirror), !is.na(inequalities)) %>%
+            transmute(
+                subject,
+                treatment = "mirror - inequalities",
+                participant_mean = mirror - inequalities
+            )
+        if (nrow(difference) > 0L) {
+            difference %>%
+                summarise(
+                    treatment = first(treatment),
+                    n = n(),
+                    mean_value = mean(participant_mean),
+                    sd_value = if (n() > 1L) sd(participant_mean) else NA_real_,
+                    se_value = if (n() > 1L) sd(participant_mean) / sqrt(n()) else NA_real_
+                )
+        } else {
+            tibble(
+                treatment = "mirror - inequalities",
+                n = 0L,
+                mean_value = NA_real_,
+                sd_value = NA_real_,
+                se_value = NA_real_
+            )
+        }
+    } else {
+        group_summary <- summary %>%
+            filter(treatment %in% c("mirror", "inequalities"))
+        mirror_row <- group_summary %>% filter(treatment == "mirror")
+        inequalities_row <- group_summary %>% filter(treatment == "inequalities")
+        tibble(
+            treatment = "mirror - inequalities",
+            n = min(mirror_row$n, inequalities_row$n),
+            mean_value = mirror_row$mean_value - inequalities_row$mean_value,
+            sd_value = NA_real_,
+            se_value = sqrt(mirror_row$se_value^2 + inequalities_row$se_value^2)
+        )
+    }
+
+    bar_data <- bind_rows(
+        summary,
+        difference_summary
+    ) %>%
+        mutate(
+            metric_label = metric_label,
+            p_value = if (is.null(wilcox_test)) NA_real_ else wilcox_test$p.value
+        ) %>%
+        select(metric_label, treatment, n, mean_value, sd_value, se_value, p_value)
+
+    if (nrow(bar_data) != 3L ||
+        any(!is.finite(bar_data$mean_value)) ||
+        any(!is.na(bar_data$se_value) & !is.finite(bar_data$se_value))) {
+        stop("Treatment bar preparation failed: expected three finite summary bars.")
+    }
+
+    list(
+        participant_means = participant_means,
+        treatment_test = treatment_test,
+        summary = bar_data,
+        p_value = if (is.null(wilcox_test)) NA_real_ else wilcox_test$p.value
+    )
+}
+
+treatment_deviation_data <- plot_observations %>%
+    filter(probability != 50) %>%
+    transmute(
+        subject,
+        treatment,
+        probability,
+        subBlock,
+        normalized_deviation
+    )
+
+treatment_deviation_tables <- make_treatment_bar_data(
+    treatment_deviation_data,
+    "normalized_deviation",
+    "Deviation",
+    comparison = "paired"
+)
+
+treatment_reaction_time_tables <- make_treatment_bar_data(
+    additional_mpl_observations,
+    "reaction_time",
+    "Reaction time (ms)",
+    comparison = "paired"
+)
+
+treatment_cognitive_uncertainty_tables <- make_treatment_bar_data(
+    additional_mpl_observations,
+    "cognitive_uncertainty",
+    "Cognitive uncertainty",
+    comparison = "paired"
+)
+
+make_ordered_treatment_tables <- function(order_values) {
+    deviation <- treatment_deviation_data %>%
+        filter(subBlock %in% order_values)
+    reaction_time <- additional_mpl_observations %>%
+        filter(subBlock %in% order_values)
+
+    list(
+        deviation = make_treatment_bar_data(
+            deviation,
+            "normalized_deviation",
+            "Deviation",
+            comparison = "independent"
+        ),
+        reaction_time = make_treatment_bar_data(
+            reaction_time,
+            "reaction_time",
+            "Reaction time (ms)",
+            comparison = "independent"
+        ),
+        cognitive_uncertainty = make_treatment_bar_data(
+            reaction_time,
+            "cognitive_uncertainty",
+            "Cognitive uncertainty",
+            comparison = "independent"
+        )
+    )
+}
+
+treatment_tables_order1 <- make_ordered_treatment_tables(1:14)
+treatment_tables_order2 <- make_ordered_treatment_tables(15:28)
 
 mean_row <- function(table, incentive_name) {
     row <- table %>% filter(incentive == incentive_name)
@@ -904,7 +1359,369 @@ cognitive_uncertainty_barplot_data <- make_metric_barplot_data(
     "Cognitive uncertainty"
 )
 
-plot_incentive_deviation_bars <- function(data, output_file = NULL) {
+incentive_deviation_tables_order1 <- make_incentive_deviation(
+    plot_observations %>% filter(subBlock %in% 1:14)
+)
+incentive_deviation_tables_order2 <- make_incentive_deviation(
+    plot_observations %>% filter(subBlock %in% 15:28)
+)
+incentive_reaction_time_tables_order1 <- make_incentive_metric(
+    additional_mpl_observations %>% filter(subBlock %in% 1:14),
+    "reaction_time"
+)
+incentive_reaction_time_tables_order2 <- make_incentive_metric(
+    additional_mpl_observations %>% filter(subBlock %in% 15:28),
+    "reaction_time"
+)
+incentive_cognitive_uncertainty_tables_order1 <- make_incentive_metric(
+    additional_mpl_observations %>% filter(subBlock %in% 1:14),
+    "cognitive_uncertainty"
+)
+incentive_cognitive_uncertainty_tables_order2 <- make_incentive_metric(
+    additional_mpl_observations %>% filter(subBlock %in% 15:28),
+    "cognitive_uncertainty"
+)
+
+make_choice_level_incentive_data <- function(data, metric_column, metric_label) {
+    if (!metric_column %in% names(data)) {
+        stop(sprintf(
+            "Choice-level preparation failed: missing metric '%s'.",
+            metric_column
+        ))
+    }
+
+    observations <- data %>%
+        filter(
+            !is.na(subject),
+            incentive %in% c("super", "classic"),
+            !is.na(.data[[metric_column]])
+        ) %>%
+        transmute(
+            subject,
+            treatment,
+            incentive = factor(incentive, levels = c("classic", "super")),
+            value = .data[[metric_column]]
+        )
+
+    if (nrow(observations) == 0L || n_distinct(observations$subject) < 2L) {
+        stop("Choice-level preparation failed: insufficient clustered observations.")
+    }
+
+    fit_clustered <- function(model_data, formula) {
+        model <- lm(formula, data = model_data)
+        covariance <- sandwich::vcovCL(model, cluster = model_data$subject)
+        list(model = model, covariance = covariance)
+    }
+
+    robust_p_value <- function(test_fit, coefficient) {
+        estimate <- coef(test_fit$model)[[coefficient]]
+        standard_error <- sqrt(test_fit$covariance[coefficient, coefficient])
+        if (!is.finite(estimate) || !is.finite(standard_error) || standard_error == 0) {
+            return(NA_real_)
+        }
+        2 * pnorm(abs(estimate / standard_error), lower.tail = FALSE)
+    }
+
+    mean_summary <- observations %>%
+        group_by(incentive) %>%
+        group_modify(~ {
+            fit <- fit_clustered(.x, value ~ 1)
+            estimate <- coef(fit$model)[[1]]
+            standard_error <- sqrt(fit$covariance[1, 1])
+            tibble(
+                n = nrow(.x),
+                n_subject = n_distinct(.x$subject),
+                mean_value = estimate,
+                se_value = standard_error
+            )
+        }) %>%
+        ungroup()
+
+    pooled_fit <- fit_clustered(observations, value ~ incentive)
+    p_super_classic <- robust_p_value(pooled_fit, "incentivesuper")
+
+    treatment_contrasts <- lapply(
+        c("mirror", "inequalities"),
+        function(treatment_name) {
+            treatment_data <- observations %>%
+                filter(treatment == treatment_name)
+            if (nrow(treatment_data) == 0L) {
+                return(tibble(
+                    treatment = treatment_name,
+                    mean_difference = NA_real_,
+                    se_difference = NA_real_,
+                    p_difference = NA_real_,
+                    mean_percent = NA_real_,
+                    se_percent = NA_real_,
+                    p_percent = NA_real_
+                ))
+            }
+
+            fit <- fit_clustered(treatment_data, value ~ incentive)
+            coefficient <- "incentivesuper"
+            difference <- coef(fit$model)[[coefficient]]
+            variance_difference <- fit$covariance[coefficient, coefficient]
+            se_difference <- sqrt(variance_difference)
+            p_difference <- robust_p_value(fit, coefficient)
+            classic_mean <- coef(fit$model)[[1]]
+            variance_classic <- fit$covariance[1, 1]
+            covariance_difference_classic <- fit$covariance[coefficient, 1]
+            percent <- difference / classic_mean * 100
+            gradient <- c(
+                100 / classic_mean,
+                -100 * difference / classic_mean^2
+            )
+            covariance_matrix <- fit$covariance[c(coefficient, "(Intercept)"),
+                c(coefficient, "(Intercept)"),
+                drop = FALSE
+            ]
+            variance_percent <- as.numeric(
+                t(gradient) %*% covariance_matrix %*% gradient
+            )
+
+            tibble(
+                treatment = treatment_name,
+                mean_difference = difference,
+                se_difference = se_difference,
+                p_difference = p_difference,
+                mean_percent = percent,
+                se_percent = sqrt(max(variance_percent, 0)),
+                p_percent = if (is.finite(variance_percent) && variance_percent > 0) {
+                    2 * pnorm(abs(percent / sqrt(variance_percent)), lower.tail = FALSE)
+                } else {
+                    NA_real_
+                }
+            )
+        }
+    ) %>%
+        bind_rows()
+
+    interaction_fit <- fit_clustered(
+        observations %>%
+            mutate(
+                treatment = factor(
+                    treatment,
+                    levels = c("inequalities", "mirror")
+                )
+            ),
+        value ~ incentive * treatment
+    )
+    interaction_coefficient <- "incentivesuper:treatmentmirror"
+    p_difference <- robust_p_value(
+        interaction_fit,
+        interaction_coefficient
+    )
+
+    cell_design <- expand_grid(
+        incentive = factor(c("classic", "super"), levels = c("classic", "super")),
+        treatment = factor(
+            c("inequalities", "mirror"),
+            levels = c("inequalities", "mirror")
+        )
+    )
+    cell_matrix <- model.matrix(
+        delete.response(terms(interaction_fit$model)),
+        cell_design
+    )
+    cell_estimates <- as.numeric(
+        cell_matrix %*% coef(interaction_fit$model)
+    )
+    cell_covariance <- cell_matrix %*%
+        interaction_fit$covariance %*%
+        t(cell_matrix)
+    inequalities_classic <- which(
+        cell_design$incentive == "classic" &
+            cell_design$treatment == "inequalities"
+    )
+    inequalities_super <- which(
+        cell_design$incentive == "super" &
+            cell_design$treatment == "inequalities"
+    )
+    mirror_classic <- which(
+        cell_design$incentive == "classic" &
+            cell_design$treatment == "mirror"
+    )
+    mirror_super <- which(
+        cell_design$incentive == "super" &
+            cell_design$treatment == "mirror"
+    )
+    percentage_gradient <- function(classic_index, super_index) {
+        classic <- cell_estimates[[classic_index]]
+        difference <- cell_estimates[[super_index]] - classic
+        gradient <- numeric(length(cell_estimates))
+        gradient[[super_index]] <- 100 / classic
+        gradient[[classic_index]] <- -100 * difference / classic^2
+        gradient
+    }
+    mirror_percentage_gradient <- percentage_gradient(
+        mirror_classic,
+        mirror_super
+    )
+    inequalities_percentage_gradient <- percentage_gradient(
+        inequalities_classic,
+        inequalities_super
+    )
+    percentage_contrast <- mirror_percentage_gradient -
+        inequalities_percentage_gradient
+    percentage_variance <- as.numeric(
+        t(percentage_contrast) %*%
+            cell_covariance %*%
+            percentage_contrast
+    )
+    p_percentage <- if (is.finite(percentage_variance) && percentage_variance > 0) {
+        percentage_estimate <- 100 * (
+            (cell_estimates[[mirror_super]] - cell_estimates[[mirror_classic]]) /
+                cell_estimates[[mirror_classic]] -
+                (cell_estimates[[inequalities_super]] -
+                    cell_estimates[[inequalities_classic]]) /
+                    cell_estimates[[inequalities_classic]]
+        )
+        2 * pnorm(
+            abs(percentage_estimate / sqrt(percentage_variance)),
+            lower.tail = FALSE
+        )
+    } else {
+        NA_real_
+    }
+
+    summary <- mean_summary %>%
+        transmute(
+            incentive = as.character(incentive),
+            n,
+            n_subject,
+            mean_value,
+            se_value
+        )
+
+    list(
+        metric_label = metric_label,
+        observations = observations,
+        means = summary,
+        differences = treatment_contrasts,
+        p_super_classic = p_super_classic,
+        p_difference = p_difference,
+        p_percentage = p_percentage
+    )
+}
+
+make_choice_level_barplot_data <- function(choice_tables) {
+    mirror <- choice_tables$differences %>% filter(treatment == "mirror")
+    inequalities <- choice_tables$differences %>% filter(treatment == "inequalities")
+    super <- choice_tables$means %>% filter(incentive == "super")
+    classic <- choice_tables$means %>% filter(incentive == "classic")
+
+    result <- tibble(
+        metric_label = choice_tables$metric_label,
+        deviation_super = super$mean_value,
+        se_deviation_super = super$se_value,
+        deviation_classic = classic$mean_value,
+        se_deviation_classic = classic$se_value,
+        p_super_classic = choice_tables$p_super_classic,
+        diff_mirror = mirror$mean_difference,
+        se_diff_mirror = mirror$se_difference,
+        diff_inequalities = inequalities$mean_difference,
+        se_diff_inequalities = inequalities$se_difference,
+        p_diff = choice_tables$p_difference,
+        percent_mirror = mirror$mean_percent,
+        se_percent_mirror = mirror$se_percent,
+        percent_inequalities = inequalities$mean_percent,
+        se_percent_inequalities = inequalities$se_percent,
+        p_percent = choice_tables$p_percentage
+    )
+
+    if (nrow(result) != 1L || any(!is.finite(unlist(result[,
+        -1L
+    ])))) {
+        stop("Choice-level preparation failed: non-finite bar data.")
+    }
+    result
+}
+
+choice_level_deviation_tables <- make_choice_level_incentive_data(
+    plot_observations,
+    "normalized_deviation",
+    "Deviation"
+)
+choice_level_reaction_time_tables <- make_choice_level_incentive_data(
+    additional_mpl_observations,
+    "reaction_time",
+    "Reaction time (ms)"
+)
+choice_level_cognitive_uncertainty_tables <- make_choice_level_incentive_data(
+    additional_mpl_observations,
+    "cognitive_uncertainty",
+    "Cognitive uncertainty"
+)
+
+choice_level_barplot_data <- list(
+    deviation = make_choice_level_barplot_data(choice_level_deviation_tables),
+    reaction_time = make_choice_level_barplot_data(choice_level_reaction_time_tables),
+    cognitive_uncertainty = make_choice_level_barplot_data(
+        choice_level_cognitive_uncertainty_tables
+    )
+)
+
+choice_level_deviation_bars_order1 <- make_choice_level_incentive_data(
+    plot_observations %>% filter(subBlock %in% 1:14),
+    "normalized_deviation",
+    "Deviation"
+)
+choice_level_deviation_bars_order2 <- make_choice_level_incentive_data(
+    plot_observations %>% filter(subBlock %in% 15:28),
+    "normalized_deviation",
+    "Deviation"
+)
+choice_level_reaction_time_bars_order1 <- make_choice_level_incentive_data(
+    additional_mpl_observations %>% filter(subBlock %in% 1:14),
+    "reaction_time",
+    "Reaction time (ms)"
+)
+choice_level_reaction_time_bars_order2 <- make_choice_level_incentive_data(
+    additional_mpl_observations %>% filter(subBlock %in% 15:28),
+    "reaction_time",
+    "Reaction time (ms)"
+)
+choice_level_cognitive_uncertainty_bars_order1 <- make_choice_level_incentive_data(
+    additional_mpl_observations %>% filter(subBlock %in% 1:14),
+    "cognitive_uncertainty",
+    "Cognitive uncertainty"
+)
+choice_level_cognitive_uncertainty_bars_order2 <- make_choice_level_incentive_data(
+    additional_mpl_observations %>% filter(subBlock %in% 15:28),
+    "cognitive_uncertainty",
+    "Cognitive uncertainty"
+)
+
+barplot_data_order1 <- make_metric_barplot_data(
+    incentive_deviation_tables_order1,
+    "Deviation"
+)
+barplot_data_order2 <- make_metric_barplot_data(
+    incentive_deviation_tables_order2,
+    "Deviation"
+)
+reaction_time_barplot_data_order1 <- make_metric_barplot_data(
+    incentive_reaction_time_tables_order1,
+    "Reaction time (ms)"
+)
+reaction_time_barplot_data_order2 <- make_metric_barplot_data(
+    incentive_reaction_time_tables_order2,
+    "Reaction time (ms)"
+)
+cognitive_uncertainty_barplot_data_order1 <- make_metric_barplot_data(
+    incentive_cognitive_uncertainty_tables_order1,
+    "Cognitive uncertainty"
+)
+cognitive_uncertainty_barplot_data_order2 <- make_metric_barplot_data(
+    incentive_cognitive_uncertainty_tables_order2,
+    "Cognitive uncertainty"
+)
+
+plot_incentive_deviation_bars <- function(
+    data,
+    output_file = NULL,
+    order_label = NULL
+) {
     difference_data <- tibble(
         bar = factor(
             c("Super", "Classic", "Mirror difference", "Inequalities difference"),
@@ -1001,8 +1818,12 @@ plot_incentive_deviation_bars <- function(data, output_file = NULL) {
         nrow = 1,
         widths = c(4, 2)
     )
+    plot_title <- paste("Pooled MPL", data$metric_label, "by incentive status")
+    if (!is.null(order_label)) {
+        plot_title <- paste(plot_title, "-", order_label)
+    }
     plot_object <- plot_object +
-        patchwork::plot_annotation(title = paste("Pooled MPL", data$metric_label, "by incentive status"))
+        patchwork::plot_annotation(title = plot_title)
 
     if (!is.null(output_file)) {
         ggsave(output_file, plot = plot_object, width = 12, height = 6, dpi = 300)
@@ -1024,21 +1845,233 @@ plot_incentive_deviation_bars(barplot_data)
 
 incentive_barplot <- plot_incentive_deviation_bars(
     barplot_data,
-    file.path(PATH_TO_DATA, "figures_pilot1_18112026", "incentive_deviation_bars.png")
+    file.path(PATH_TO_DATA, dir_figures, "incentive_deviation_bars.png")
 )
 plot_incentive_deviation_bars(barplot_data)
 
 reaction_time_barplot <- plot_incentive_deviation_bars(
     reaction_time_barplot_data,
-    file.path(PATH_TO_DATA, "figures_pilot1_18112026", "incentive_reaction_time_bars.png")
+    file.path(PATH_TO_DATA, dir_figures, "incentive_reaction_time_bars.png")
 )
 plot_incentive_deviation_bars(reaction_time_barplot_data)
 
 cognitive_uncertainty_barplot <- plot_incentive_deviation_bars(
     cognitive_uncertainty_barplot_data,
-    file.path(PATH_TO_DATA, "figures_pilot1_18112026", "incentive_cognitive_uncertainty_bars.png")
+    file.path(PATH_TO_DATA, dir_figures, "incentive_cognitive_uncertainty_bars.png")
 )
 plot_incentive_deviation_bars(cognitive_uncertainty_barplot_data)
+
+plot_treatment_bars <- function(
+    data,
+    output_file = NULL,
+    order_label = NULL
+) {
+    treatment_levels <- c("mirror", "inequalities", "mirror - inequalities")
+    labels <- c(
+        mirror = "Preference\n(mirror)",
+        inequalities = "Objective-goal\n(inequalities)",
+        `mirror - inequalities` = "Difference"
+    )
+
+    plot_data <- data$summary %>%
+        mutate(
+            treatment = factor(treatment, levels = treatment_levels),
+            label = unname(labels[as.character(treatment)])
+        )
+
+    finite_bounds <- plot_data %>%
+        filter(is.finite(mean_value), is.finite(se_value)) %>%
+        mutate(
+            lower = mean_value - 2 * se_value,
+            upper = mean_value + 2 * se_value
+        )
+    y_min <- min(c(finite_bounds$lower, 0), na.rm = TRUE)
+    y_max <- max(c(finite_bounds$upper, 0), na.rm = TRUE)
+    y_range <- y_max - y_min
+    if (!is.finite(y_range) || y_range == 0) y_range <- 1
+
+    plot_title <- paste("Treatment framing:", data$summary$metric_label[[1]])
+    if (!is.null(order_label)) {
+        plot_title <- paste(plot_title, "-", order_label)
+    }
+
+    plot_object <- ggplot(
+        plot_data,
+        aes(x = treatment, y = mean_value, fill = treatment)
+    ) +
+        geom_col(width = 0.65, colour = "black", linewidth = 0.35) +
+        geom_errorbar(
+            aes(
+                ymin = mean_value - 2 * se_value,
+                ymax = mean_value + 2 * se_value
+            ),
+            width = 0.16,
+            linewidth = 0.55,
+            na.rm = TRUE
+        ) +
+        geom_text(
+            aes(
+                label = sprintf("%.2f", mean_value),
+                y = ifelse(mean_value >= 0, mean_value + 2 * se_value, mean_value - 2 * se_value),
+                vjust = ifelse(mean_value >= 0, -0.8, 1.8)
+            ),
+            size = 3.2
+        ) +
+        scale_x_discrete(labels = labels) +
+        scale_fill_manual(
+            values = c(
+                "mirror" = "#E7B800",
+                "inequalities" = "#00AFBB",
+                "mirror - inequalities" = "#7A7A7A"
+            )
+        ) +
+        labs(
+            title = plot_title,
+            x = NULL,
+            y = data$summary$metric_label[[1]]
+        ) +
+        theme_bw(base_size = 12) +
+        theme(
+            legend.position = "none",
+            axis.text.x = element_text(angle = 20, hjust = 1),
+            panel.grid.major.x = element_blank()
+        ) +
+        coord_cartesian(
+            ylim = c(y_min - 0.12 * y_range, y_max + 0.22 * y_range),
+            clip = "off"
+        ) +
+        annotate(
+            "text",
+            x = 1.5,
+            y = y_max + 0.15 * y_range,
+            label = paste0("paired p = ", format_p_value(data$p_value)),
+            size = 3.4
+        )
+
+    if (!is.null(output_file)) {
+        ggsave(output_file, plot = plot_object, width = 7, height = 6, dpi = 300)
+    }
+
+    plot_object
+}
+
+treatment_deviation_bars <- plot_treatment_bars(
+    treatment_deviation_tables,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_deviation_bars.png")
+)
+treatment_RT_bars <- plot_treatment_bars(
+    treatment_reaction_time_tables,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_RT_bars.png")
+)
+treatment_cognitive_uncertainty_bars <- plot_treatment_bars(
+    treatment_cognitive_uncertainty_tables,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_cognitive_uncertainty_bars.png")
+)
+
+treatment_deviation_bars_order1 <- plot_treatment_bars(
+    treatment_tables_order1$deviation,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_deviation_bars_order1.png"),
+    order_label = "order 1"
+)
+treatment_deviation_bars_order2 <- plot_treatment_bars(
+    treatment_tables_order2$deviation,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_deviation_bars_order2.png"),
+    order_label = "order 2"
+)
+treatment_RT_bars_order1 <- plot_treatment_bars(
+    treatment_tables_order1$reaction_time,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_RT_bars_order1.png"),
+    order_label = "order 1"
+)
+treatment_RT_bars_order2 <- plot_treatment_bars(
+    treatment_tables_order2$reaction_time,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_RT_bars_order2.png"),
+    order_label = "order 2"
+)
+treatment_cognitive_uncertainty_bars_order1 <- plot_treatment_bars(
+    treatment_tables_order1$cognitive_uncertainty,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_cognitive_uncertainty_bars_order1.png"),
+    order_label = "order 1"
+)
+treatment_cognitive_uncertainty_bars_order2 <- plot_treatment_bars(
+    treatment_tables_order2$cognitive_uncertainty,
+    file.path(PATH_TO_DATA, dir_figures, "treatment_cognitive_uncertainty_bars_order2.png"),
+    order_label = "order 2"
+)
+
+incentive_deviation_bars_order1 <- plot_incentive_deviation_bars(
+    barplot_data_order1,
+    file.path(PATH_TO_DATA, dir_figures, "incentive_deviation_bars_order1.png"),
+    order_label = "order 1"
+)
+incentive_deviation_bars_order2 <- plot_incentive_deviation_bars(
+    barplot_data_order2,
+    file.path(PATH_TO_DATA, dir_figures, "incentive_deviation_bars_order2.png"),
+    order_label = "order 2"
+)
+incentive_reaction_time_bars_order1 <- plot_incentive_deviation_bars(
+    reaction_time_barplot_data_order1,
+    file.path(PATH_TO_DATA, dir_figures, "incentive_reaction_time_bars_order1.png"),
+    order_label = "order 1"
+)
+incentive_reaction_time_bars_order2 <- plot_incentive_deviation_bars(
+    reaction_time_barplot_data_order2,
+    file.path(PATH_TO_DATA, dir_figures, "incentive_reaction_time_bars_order2.png"),
+    order_label = "order 2"
+)
+incentive_cognitive_uncertainty_bars_order1 <- plot_incentive_deviation_bars(
+    cognitive_uncertainty_barplot_data_order1,
+    file.path(PATH_TO_DATA, dir_figures, "incentive_cognitive_uncertainty_bars_order1.png"),
+    order_label = "order 1"
+)
+incentive_cognitive_uncertainty_bars_order2 <- plot_incentive_deviation_bars(
+    cognitive_uncertainty_barplot_data_order2,
+    file.path(PATH_TO_DATA, dir_figures, "incentive_cognitive_uncertainty_bars_order2.png"),
+    order_label = "order 2"
+)
+
+choice_level_deviation_bars <- plot_incentive_deviation_bars(
+    choice_level_barplot_data$deviation,
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_deviation_bars.png")
+)
+choice_level_reaction_time_bars <- plot_incentive_deviation_bars(
+    choice_level_barplot_data$reaction_time,
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_reaction_time_bars.png")
+)
+choice_level_cognitive_uncertainty_bars <- plot_incentive_deviation_bars(
+    choice_level_barplot_data$cognitive_uncertainty,
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_cognitive_uncertainty_bars.png")
+)
+choice_level_deviation_bars_order1 <- plot_incentive_deviation_bars(
+    make_choice_level_barplot_data(choice_level_deviation_bars_order1),
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_deviation_bars_order1.png"),
+    order_label = "order 1"
+)
+choice_level_deviation_bars_order2 <- plot_incentive_deviation_bars(
+    make_choice_level_barplot_data(choice_level_deviation_bars_order2),
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_deviation_bars_order2.png"),
+    order_label = "order 2"
+)
+choice_level_reaction_time_bars_order1 <- plot_incentive_deviation_bars(
+    make_choice_level_barplot_data(choice_level_reaction_time_bars_order1),
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_reaction_time_bars_order1.png"),
+    order_label = "order 1"
+)
+choice_level_reaction_time_bars_order2 <- plot_incentive_deviation_bars(
+    make_choice_level_barplot_data(choice_level_reaction_time_bars_order2),
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_reaction_time_bars_order2.png"),
+    order_label = "order 2"
+)
+choice_level_cognitive_uncertainty_bars_order1 <- plot_incentive_deviation_bars(
+    make_choice_level_barplot_data(choice_level_cognitive_uncertainty_bars_order1),
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_cognitive_uncertainty_bars_order1.png"),
+    order_label = "order 1"
+)
+choice_level_cognitive_uncertainty_bars_order2 <- plot_incentive_deviation_bars(
+    make_choice_level_barplot_data(choice_level_cognitive_uncertainty_bars_order2),
+    file.path(PATH_TO_DATA, dir_figures, "choice_level_cognitive_uncertainty_bars_order2.png"),
+    order_label = "order 2"
+)
 
 
 cat("Participant records:", length(participant_records), "\n")

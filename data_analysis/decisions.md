@@ -17,3 +17,37 @@ For the pooled incentive bar plots, inferential units are participants rather th
 The ggplot2 incentive bar plot uses six bars: super, classic, mirror difference, inequalities difference, mirror percentage, and inequalities percentage. Bars 1–4 use an independent left Difference axis, while bars 5–6 use an independent right Percentage difference axis. Error bars span ±2 SE. Super and mirror bars use `#E7B800`; classic and inequalities bars use `#00AFBB`. Each planned pair has a paired Wilcoxon p-value annotation above the bars. The plot is written to `data/figures_test_14112026/incentive_deviation_bars.png`.
 
 For the additional MPL metrics, reaction time is analyzed in milliseconds and cognitive uncertainty is reverse-coded as `100 - CU`, so 100 represents maximum uncertainty. These metrics use all valid incentivized MPL rows and do not inherit the CE/LE validity filter used for deviation analyses. Both use the same participant-level mean aggregation, participant-level standard errors, and paired Wilcoxon comparisons as the deviation bars. Correlations with deviations, time, uncertainty, and attention have not yet been implemented.
+
+Treatment-framing bar plots exclude GO50 and LO50 as specified in the plan.
+The inferential unit is the participant: observations are first averaged
+within participant and treatment. The third bar is the paired participant
+difference `mirror - inequalities`; its p-value is from a paired Wilcoxon test
+comparing the two treatment means. Error bars show +/-2 participant-level SE.
+
+Order-specific treatment and incentive plots use `subBlock` 1--14 for order 1
+and 15--28 for order 2. Because instruction treatment is between participants
+within a given order, order-specific treatment comparisons use independent
+Wilcoxon rank-sum tests rather than paired tests. The order-specific treatment
+difference is mirror minus inequalities, with SE propagated from the two
+independent treatment-group SEs. Pooled treatment plots retain paired tests.
+
+Choice-level incentive plots use individual valid MPL rows as the descriptive
+unit but cluster all standard errors by participant. Means and super-minus-
+classic contrasts are estimated with linear models and `sandwich::vcovCL`;
+percentage-difference SEs use the delta method. This avoids treating repeated
+choices from the same participant as independent while retaining the
+choice-level estimand. The associated robust p-values use normal-reference
+Wald tests.
+
+For the gain/arithmetic comparison, the analysis unit is the participant. For
+each GO probability, CE deviation is `CE - expected value`, and arithmetic
+deviation is the arithmetic-test answer minus the same expected value
+(`25 * probability / 100`). Repeated gain MPL rows and repeated CSV copies of
+the arithmetic fields are averaged within participant before the means and
+paired Wilcoxon tests are calculated. The output includes only participants
+with both measures for a probability in the paired test; the participant-level
+joined table retains unmatched rows for auditability. The tables are kept as
+in-memory data frames rather than written to CSV. `calculationVsCE` displays
+the mean CE and arithmetic deviations across GO10--GO90, with error bars
+covering +/-2 participant-level SE and a paired Wilcoxon p-value annotation
+for each probability.
